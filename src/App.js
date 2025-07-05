@@ -6,6 +6,8 @@ function NightingaleConnect() {
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const [registrationStep, setRegistrationStep] = useState(1);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [authForm, setAuthForm] = useState({
     email: '', 
@@ -442,105 +444,355 @@ function handleLogin() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{backgroundColor: '#12464d'}}>
-                <span className="text-white font-bold text-sm">NC</span>
-              </div>
-              <h1 className="text-xl font-semibold" style={{color: '#12464d'}}>
-                Nightingale Connect
-              </h1>
+return (
+  <div className="min-h-screen bg-gray-50">
+    <header className="bg-white shadow-sm border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{backgroundColor: '#12464d'}}>
+              <span className="text-white font-bold text-sm">NC</span>
             </div>
+            <h1 className="text-lg sm:text-xl font-semibold" style={{color: '#12464d'}}>
+              <span className="hidden sm:inline">Nightingale Connect</span>
+              <span className="sm:hidden">Nightingale</span>
+            </h1>
+          </div>
+          
+          {/* Navigation Menu */}
+          <nav className="hidden md:flex space-x-8">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'dashboard' ? 'border-b-2' : 'text-gray-600 hover:text-gray-900'
+              }`}
+              style={activeTab === 'dashboard' ? {color: '#12464d', borderBottomColor: '#12464d'} : {}}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('questions')}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'questions' ? 'border-b-2' : 'text-gray-600 hover:text-gray-900'
+              }`}
+              style={activeTab === 'questions' ? {color: '#12464d', borderBottomColor: '#12464d'} : {}}
+            >
+              Questions
+            </button>
+            <button
+              onClick={() => setActiveTab('network')}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'network' ? 'border-b-2' : 'text-gray-600 hover:text-gray-900'
+              }`}
+              style={activeTab === 'network' ? {color: '#12464d', borderBottomColor: '#12464d'} : {}}
+            >
+              Network
+            </button>
+            <button
+              onClick={() => setActiveTab('knowledge')}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'knowledge' ? 'border-b-2' : 'text-gray-600 hover:text-gray-900'
+              }`}
+              style={activeTab === 'knowledge' ? {color: '#12464d', borderBottomColor: '#12464d'} : {}}
+            >
+              Knowledge Base
+            </button>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <button className="p-2 text-gray-600 hover:text-gray-900 relative">
+              <span className="text-lg">🔔</span>
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+            </button>
+            <div className="hidden md:flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor: '#f0f9ff'}}>
+                <span className="text-sm">👤</span>
+              </div>
+              <span className="hidden lg:block text-sm font-medium text-gray-700">Dr. Sarah Johnson</span>
+              <span className="text-green-500">✓</span>
+            </div>
+            <button
+              onClick={() => setIsLoggedIn(false)}
+              className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm"
+            >
+              Logout
+            </button>
             
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">Welcome, Dr. Sarah Johnson</span>
+            {/* Mobile hamburger menu */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              {mobileMenuOpen ? '✕' : '☰'}
+            </button>
+          </div>
+        </div>
+        
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-gray-200 bg-white">
+            <nav className="flex flex-col space-y-1 pt-4">
               <button
-                onClick={() => setIsLoggedIn(false)}
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm"
+                onClick={() => {
+                  setActiveTab('dashboard');
+                  setMobileMenuOpen(false);
+                }}
+                className={`mx-3 px-4 py-3 text-left text-sm font-medium transition-colors rounded-lg ${
+                  activeTab === 'dashboard' ? 'text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                style={activeTab === 'dashboard' ? {backgroundColor: '#12464d'} : {}}
               >
-                Logout
+                📊 Dashboard
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('questions');
+                  setMobileMenuOpen(false);
+                }}
+                className={`mx-3 px-4 py-3 text-left text-sm font-medium transition-colors rounded-lg ${
+                  activeTab === 'questions' ? 'text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                style={activeTab === 'questions' ? {backgroundColor: '#12464d'} : {}}
+              >
+                ❓ Questions
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('network');
+                  setMobileMenuOpen(false);
+                }}
+                className={`mx-3 px-4 py-3 text-left text-sm font-medium transition-colors rounded-lg ${
+                  activeTab === 'network' ? 'text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                style={activeTab === 'network' ? {backgroundColor: '#12464d'} : {}}
+              >
+                🏥 Network
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('knowledge');
+                  setMobileMenuOpen(false);
+                }}
+                className={`mx-3 px-4 py-3 text-left text-sm font-medium transition-colors rounded-lg ${
+                  activeTab === 'knowledge' ? 'text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                style={activeTab === 'knowledge' ? {backgroundColor: '#12464d'} : {}}
+              >
+                📚 Knowledge Base
+              </button>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      
+      {/* Dashboard Tab */}
+      {activeTab === 'dashboard' && (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r text-white rounded-lg p-4 sm:p-6" style={{background: 'linear-gradient(to right, #12464d, #0f3a40)'}}>
+            <h1 className="text-xl sm:text-2xl font-bold mb-2">Welcome to Nightingale Connect</h1>
+            <p className="text-gray-100 text-sm sm:text-base">Stop Searching, Start Finding. Your trusted professional network.</p>
+            <p className="text-gray-200 text-xs sm:text-sm mt-2">Following in Florence's footsteps - connecting SA nurse practitioners.</p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600">Active Questions</p>
+                  <p className="text-lg sm:text-2xl font-bold" style={{color: '#12464d'}}>15</p>
+                </div>
+                <span className="text-2xl">💬</span>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600">Verified NPs</p>
+                  <p className="text-lg sm:text-2xl font-bold" style={{color: '#0f7c3a'}}>234</p>
+                </div>
+                <span className="text-2xl">👥</span>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600">Knowledge Base</p>
+                  <p className="text-lg sm:text-2xl font-bold" style={{color: '#7c2d12'}}>156</p>
+                </div>
+                <span className="text-2xl">📚</span>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600">Rural Connections</p>
+                  <p className="text-lg sm:text-2xl font-bold" style={{color: '#c2410c'}}>23</p>
+                </div>
+                <span className="text-2xl">📍</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-semibold mb-4">Recent Questions</h2>
+            <div className="space-y-4">
+              <div className="border-l-4 pl-4 py-2" style={{borderLeftColor: '#12464d'}}>
+                <h3 className="font-medium text-gray-900 text-sm sm:text-base">Hypertension management in rural settings</h3>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">What are the best practices for managing hypertension in patients with limited access to specialists?</p>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 text-xs sm:text-sm text-gray-500">
+                  <span>By Dr. Sarah Johnson</span>
+                  <span>2 hours ago</span>
+                  <span>3 responses</span>
+                  <span className="flex items-center gap-1">
+                    👍 12
+                  </span>
+                </div>
+              </div>
+              <div className="border-l-4 pl-4 py-2" style={{borderLeftColor: '#12464d'}}>
+                <h3 className="font-medium text-gray-900 text-sm sm:text-base">POPIA compliance for patient records</h3>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">How do we ensure POPIA compliance when sharing patient information for consultations?</p>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 text-xs sm:text-sm text-gray-500">
+                  <span>By NP Maria Van Der Merwe</span>
+                  <span>5 hours ago</span>
+                  <span>1 responses</span>
+                  <span className="flex items-center gap-1">
+                    👍 8
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <button
+                onClick={() => setActiveTab('questions')}
+                className="text-sm font-medium hover:underline transition-colors"
+                style={{color: '#12464d'}}
+              >
+                View all questions →
               </button>
             </div>
           </div>
         </div>
-      </header>
+      )}
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-gradient-to-r text-white rounded-lg p-6" style={{background: 'linear-gradient(to right, #12464d, #0f3a40)'}}>
-          <h1 className="text-2xl font-bold mb-2">Welcome to Nightingale Connect</h1>
-          <p className="text-gray-100">Stop Searching, Start Finding. Your trusted professional network.</p>
-          <p className="text-gray-200 text-sm mt-2">Following in Florence's footsteps - connecting SA nurse practitioners.</p>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Active Questions</p>
-                <p className="text-2xl font-bold" style={{color: '#12464d'}}>15</p>
-              </div>
-              <span className="text-2xl">💬</span>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Verified NPs</p>
-                <p className="text-2xl font-bold" style={{color: '#0f7c3a'}}>234</p>
-              </div>
-              <span className="text-2xl">👥</span>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Knowledge Base</p>
-                <p className="text-2xl font-bold" style={{color: '#7c2d12'}}>156</p>
-              </div>
-              <span className="text-2xl">📚</span>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Rural Connections</p>
-                <p className="text-2xl font-bold" style={{color: '#c2410c'}}>23</p>
-              </div>
-              <span className="text-2xl">📍</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6 mt-8">
-          <h2 className="text-xl font-semibold mb-4">Recent Questions</h2>
+      {/* Questions Tab */}
+      {activeTab === 'questions' && (
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">Questions & Answers</h2>
+          <p className="text-gray-600 mb-4">Ask questions, share knowledge, and connect with fellow NPs.</p>
           <div className="space-y-4">
-            <div className="border-l-4 pl-4 py-2" style={{borderLeftColor: '#12464d'}}>
-              <h3 className="font-medium text-gray-900">Hypertension management in rural settings</h3>
-              <p className="text-sm text-gray-600 mt-1">What are the best practices for managing hypertension in patients with limited access to specialists?</p>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                <span>By Dr. Sarah Johnson</span>
-                <span>2 hours ago</span>
-                <span>👍 12</span>
+            <div className="border rounded-lg p-4">
+              <h3 className="font-medium mb-2">How do you handle difficult family dynamics in pediatric care?</h3>
+              <p className="text-gray-600 text-sm mb-3">When families disagree on treatment plans, what strategies work best?</p>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <span>Sister Mary Ndaba</span>
+                <span>Pediatric Care</span>
+                <span>👍 5</span>
+                <span>💬 3 responses</span>
               </div>
             </div>
-            <div className="border-l-4 pl-4 py-2" style={{borderLeftColor: '#12464d'}}>
-              <h3 className="font-medium text-gray-900">POPIA compliance for patient records</h3>
-              <p className="text-sm text-gray-600 mt-1">How do we ensure POPIA compliance when sharing patient information for consultations?</p>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                <span>By NP Maria Van Der Merwe</span>
-                <span>5 hours ago</span>
+            <div className="border rounded-lg p-4">
+              <h3 className="font-medium mb-2">Best practices for wound care in diabetic patients?</h3>
+              <p className="text-gray-600 text-sm mb-3">Looking for evidence-based approaches to diabetic foot ulcer management.</p>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <span>NP John Molefe</span>
+                <span>Primary Care</span>
                 <span>👍 8</span>
+                <span>💬 6 responses</span>
               </div>
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  );
+      )}
+
+      {/* Network Tab */}
+      {activeTab === 'network' && (
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">Professional Network</h2>
+          <p className="text-gray-600 mb-6">Connect with verified nurse practitioners across South Africa.</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="border rounded-lg p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold" style={{backgroundColor: '#12464d'}}>
+                  SJ
+                </div>
+                <div>
+                  <h3 className="font-semibold">Dr. Sarah Johnson</h3>
+                  <p className="text-sm text-gray-600">Rural Health</p>
+                </div>
+                <span className="text-green-500">✓</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">📍 Polokwane, Limpopo</p>
+              <p className="text-sm text-gray-600 mb-3">⭐ 4.9 (15 years experience)</p>
+              <button className="w-full text-white px-4 py-2 rounded-lg text-sm" style={{backgroundColor: '#12464d'}}>
+                Connect
+              </button>
+            </div>
+            
+            <div className="border rounded-lg p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold" style={{backgroundColor: '#12464d'}}>
+                  MV
+                </div>
+                <div>
+                  <h3 className="font-semibold">NP Maria Van Der Merwe</h3>
+                  <p className="text-sm text-gray-600">Primary Care</p>
+                </div>
+                <span className="text-green-500">✓</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">📍 Cape Town, Western Cape</p>
+              <p className="text-sm text-gray-600 mb-3">⭐ 4.8 (12 years experience)</p>
+              <button className="w-full text-white px-4 py-2 rounded-lg text-sm" style={{backgroundColor: '#12464d'}}>
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Knowledge Base Tab */}
+      {activeTab === 'knowledge' && (
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">Knowledge Base</h2>
+          <p className="text-gray-600 mb-6">Access clinical guidelines, protocols, and educational resources.</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="border rounded-lg p-4">
+              <div className="text-3xl mb-3">🏥</div>
+              <h3 className="font-semibold mb-2">Clinical Guidelines</h3>
+              <p className="text-sm text-gray-600 mb-4">Evidence-based protocols for SA healthcare</p>
+              <button className="text-sm font-medium hover:underline" style={{color: '#12464d'}}>
+                Browse Guidelines →
+              </button>
+            </div>
+            
+            <div className="border rounded-lg p-4">
+              <div className="text-3xl mb-3">📋</div>
+              <h3 className="font-semibold mb-2">Case Studies</h3>
+              <p className="text-sm text-gray-600 mb-4">Real-world cases from SA practitioners</p>
+              <button className="text-sm font-medium hover:underline" style={{color: '#12464d'}}>
+                View Cases →
+              </button>
+            </div>
+            
+            <div className="border rounded-lg p-4">
+              <div className="text-3xl mb-3">🔒</div>
+              <h3 className="font-semibold mb-2">POPIA Compliance</h3>
+              <p className="text-sm text-gray-600 mb-4">Data protection guidelines</p>
+              <button className="text-sm font-medium hover:underline" style={{color: '#12464d'}}>
+                Learn More →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </main>
+  </div>
+);
 }
 
 export default NightingaleConnect;
