@@ -108,7 +108,7 @@ function handleLogin() {
 }
 
   function handleRegisterStep1() {
-    setRegistrationStep(2);
+    setRegistrationStep(2) ;
   }
 
   function handleCredentialsSubmit() {
