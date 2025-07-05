@@ -113,4 +113,417 @@ function NightingaleConnect() {
             </div>
             <div className="text-center p-6">
               <div className="text-4xl mb-4">💬</div>
-              <h
+              <h3 className="text-xl font-semibold mb-3">Ask & Answer</h3>
+              <p className="text-gray-600">Get expert advice on clinical questions and share your knowledge</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="text-4xl mb-4">📚</div>
+              <h3 className="text-xl font-semibold mb-3">Learn Together</h3>
+              <p className="text-gray-600">Access clinical guidelines and stay updated with best practices</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-semibold mb-6 text-center">Recent Community Questions</h2>
+            <div className="space-y-4">
+              <div className="border-l-4 pl-4 py-3" style={{borderLeftColor: '#12464d'}}>
+                <h3 className="font-medium text-gray-900">Hypertension management in rural settings</h3>
+                <p className="text-gray-600 mt-1">What are the best practices for managing hypertension in patients with limited access to specialists?</p>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>Dr. Sarah Johnson</span>
+                  <span>Rural Health</span>
+                  <span>👍 12</span>
+                </div>
+              </div>
+              <div className="border-l-4 pl-4 py-3" style={{borderLeftColor: '#12464d'}}>
+                <h3 className="font-medium text-gray-900">POPIA compliance for patient records</h3>
+                <p className="text-gray-600 mt-1">How do we ensure POPIA compliance when sharing patient information for consultations?</p>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>NP Maria Van Der Merwe</span>
+                  <span>Primary Care</span>
+                  <span>👍 8</span>
+                </div>
+              </div>
+              <div className="border-l-4 pl-4 py-3" style={{borderLeftColor: '#12464d'}}>
+                <h3 className="font-medium text-gray-900">Pediatric vaccination schedules post-COVID</h3>
+                <p className="text-gray-600 mt-1">Have there been any updates to childhood vaccination schedules following COVID-19?</p>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>Sister Jane Mthembu</span>
+                  <span>Pediatric Care</span>
+                  <span>👍 15</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-center mt-6">
+              <button
+                onClick={openRegister}
+                className="text-sm font-medium hover:underline"
+                style={{color: '#12464d'}}
+              >
+                Join to see more questions and participate →
+              </button>
+            </div>
+          </div>
+        </main>
+
+        {showAuth && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">
+                    {authMode === 'login' ? 'Login' : registrationStep === 1 ? 'Register - Step 1' : 'Register - Credentials'}
+                  </h2>
+                  <button
+                    onClick={closeAuth}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {authMode === 'login' ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <input
+                        type="email"
+                        value={authForm.email}
+                        onChange={(e) => setAuthForm({...authForm, email: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                      <input
+                        type="password"
+                        value={authForm.password}
+                        onChange={(e) => setAuthForm({...authForm, password: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <button
+                      onClick={handleLogin}
+                      className="w-full text-white px-4 py-3 rounded-lg hover:opacity-90 font-medium"
+                      style={{backgroundColor: '#12464d'}}
+                    >
+                      Login
+                    </button>
+                    <p className="text-center text-sm text-gray-600">
+                      Don't have an account?{' '}
+                      <button
+                        onClick={() => {setAuthMode('register'); setRegistrationStep(1);}}
+                        className="font-medium hover:underline"
+                        style={{color: '#12464d'}}
+                      >
+                        Register here
+                      </button>
+                    </p>
+                  </div>
+                ) : registrationStep === 1 ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                      <input
+                        type="text"
+                        value={authForm.firstName}
+                        onChange={(e) => setAuthForm({...authForm, firstName: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                      <input
+                        type="text"
+                        value={authForm.lastName}
+                        onChange={(e) => setAuthForm({...authForm, lastName: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <input
+                        type="email"
+                        value={authForm.email}
+                        onChange={(e) => setAuthForm({...authForm, email: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                      <input
+                        type="password"
+                        value={authForm.password}
+                        onChange={(e) => setAuthForm({...authForm, password: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="">Select Specialty</option>
+                        <option value="Primary Care">Primary Care</option>
+                        <option value="Rural Health">Rural Health</option>
+                        <option value="Pediatric Care">Pediatric Care</option>
+                        <option value="Emergency Care">Emergency Care</option>
+                        <option value="Mental Health">Mental Health</option>
+                        <option value="Endocrinology">Endocrinology</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Oncology">Oncology</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="">Select Province</option>
+                        <option value="Eastern Cape">Eastern Cape</option>
+                        <option value="Free State">Free State</option>
+                        <option value="Gauteng">Gauteng</option>
+                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                        <option value="Limpopo">Limpopo</option>
+                        <option value="Mpumalanga">Mpumalanga</option>
+                        <option value="Northern Cape">Northern Cape</option>
+                        <option value="North West">North West</option>
+                        <option value="Western Cape">Western Cape</option>
+                      </select>
+                    </div>
+                    <button
+                      onClick={handleRegisterStep1}
+                      className="w-full text-white px-4 py-3 rounded-lg hover:opacity-90 font-medium"
+                      style={{backgroundColor: '#12464d'}}
+                    >
+                      Continue to Credentials
+                    </button>
+                    <p className="text-center text-sm text-gray-600">
+                      Already have an account?{' '}
+                      <button
+                        onClick={() => setAuthMode('login')}
+                        className="font-medium hover:underline"
+                        style={{color: '#12464d'}}
+                      >
+                        Login here
+                      </button>
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-sm text-blue-800">
+                        <strong>Professional Verification Required:</strong> Please provide your professional credentials for verification.
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Professional Registration Number *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., SANC Registration Number"
+                          value={credentialsForm.professionalNumber}
+                          onChange={(e) => setCredentialsForm({...credentialsForm, professionalNumber: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Primary Qualification *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Bachelor of Nursing Science"
+                          value={credentialsForm.qualifications}
+                          onChange={(e) => setCredentialsForm({...credentialsForm, qualifications: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Institution *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., University of Cape Town"
+                          value={credentialsForm.institution}
+                          onChange={(e) => setCredentialsForm({...credentialsForm, institution: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Graduation Year *
+                        </label>
+                        <input
+                          type="number"
+                          min="1980"
+                          max="2024"
+                          placeholder="e.g., 2018"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Current Employer *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Groote Schuur Hospital"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Professional Reference Contact *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Name and contact details of a professional reference"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => setRegistrationStep(1)}
+                          className="flex-1 text-gray-600 px-4 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 font-medium"
+                        >
+                          Back
+                        </button>
+                        <button
+                          onClick={handleCredentialsSubmit}
+                          className="flex-1 text-white px-4 py-3 rounded-lg hover:opacity-90 font-medium"
+                          style={{backgroundColor: '#12464d'}}
+                        >
+                          Submit for Verification
+                        </button>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-4">
+                        * Required fields. Your information will be kept confidential and used only for verification purposes.
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <footer className="bg-white border-t border-gray-200 mt-16">
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="w-6 h-6 rounded flex items-center justify-center" style={{backgroundColor: '#12464d'}}>
+                  <span className="text-white font-bold text-xs">NC</span>
+                </div>
+                <span className="font-semibold" style={{color: '#12464d'}}>Nightingale Connect</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">Professional network for South African Nurse Practitioners</p>
+              <p className="text-xs text-gray-500">&copy; 2024 Nightingale Connect. Built for SA NPs.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{backgroundColor: '#12464d'}}>
+                <span className="text-white font-bold text-sm">NC</span>
+              </div>
+              <h1 className="text-xl font-semibold" style={{color: '#12464d'}}>
+                Nightingale Connect
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">Welcome, Dr. Sarah Johnson</span>
+              <button
+                onClick={() => setIsLoggedIn(false)}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-gradient-to-r text-white rounded-lg p-6" style={{background: 'linear-gradient(to right, #12464d, #0f3a40)'}}>
+          <h1 className="text-2xl font-bold mb-2">Welcome to Nightingale Connect</h1>
+          <p className="text-gray-100">Stop Searching, Start Finding. Your trusted professional network.</p>
+          <p className="text-gray-200 text-sm mt-2">Following in Florence's footsteps - connecting SA nurse practitioners.</p>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Active Questions</p>
+                <p className="text-2xl font-bold" style={{color: '#12464d'}}>15</p>
+              </div>
+              <span className="text-2xl">💬</span>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Verified NPs</p>
+                <p className="text-2xl font-bold" style={{color: '#0f7c3a'}}>234</p>
+              </div>
+              <span className="text-2xl">👥</span>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Knowledge Base</p>
+                <p className="text-2xl font-bold" style={{color: '#7c2d12'}}>156</p>
+              </div>
+              <span className="text-2xl">📚</span>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Rural Connections</p>
+                <p className="text-2xl font-bold" style={{color: '#c2410c'}}>23</p>
+              </div>
+              <span className="text-2xl">📍</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 mt-8">
+          <h2 className="text-xl font-semibold mb-4">Recent Questions</h2>
+          <div className="space-y-4">
+            <div className="border-l-4 pl-4 py-2" style={{borderLeftColor: '#12464d'}}>
+              <h3 className="font-medium text-gray-900">Hypertension management in rural settings</h3>
+              <p className="text-sm text-gray-600 mt-1">What are the best practices for managing hypertension in patients with limited access to specialists?</p>
+              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                <span>By Dr. Sarah Johnson</span>
+                <span>2 hours ago</span>
+                <span>👍 12</span>
+              </div>
+            </div>
+            <div className="border-l-4 pl-4 py-2" style={{borderLeftColor: '#12464d'}}>
+              <h3 className="font-medium text-gray-900">POPIA compliance for patient records</h3>
+              <p className="text-sm text-gray-600 mt-1">How do we ensure POPIA compliance when sharing patient information for consultations?</p>
+              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                <span>By NP Maria Van Der Merwe</span>
+                <span>5 hours ago</span>
+                <span>👍 8</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default NightingaleConnect;
