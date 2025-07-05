@@ -217,6 +217,15 @@ function handleLogin() {
                     >
                       Login
                     </button>
+                    <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium mb-2">Test Accounts:</p>
+                      <div className="text-xs text-gray-500 space-y-1">
+                        <div>📧 test@nightingale.co.za</div>
+                        <div>🔐 demo123</div>
+                        <div className="pt-1">📧 sarah@nightingale.co.za</div>
+                        <div>🔐 rural123</div>
+                      </div>
+                    </div>
                     <p className="text-center text-sm text-gray-600">
                       Don't have an account?{' '}
                       <button
