@@ -10,13 +10,6 @@ function NightingaleConnect() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 
-const [isLoggedIn, setIsLoggedIn] = useState(false);
-const [showAuth, setShowAuth] = useState(false);
-const [authMode, setAuthMode] = useState('login');
-const [registrationStep, setRegistrationStep] = useState(1);
-const [activeTab, setActiveTab] = useState('dashboard');
-const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
 // ADD THIS NEW QUESTIONS ARRAY:
 const [questions, setQuestions] = useState([
   {
