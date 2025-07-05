@@ -75,12 +75,7 @@ const [questions, setQuestions] = useState([
 ]);
 
 // Keep your existing state declarations:
-const [authForm, setAuthForm] = useState({
-  email: '', 
-  password: '', 
-  firstName: '', 
-  lastName: ''
-});  
+ 
   const [authForm, setAuthForm] = useState({
     email: '', 
     password: '', 
