@@ -20,10 +20,18 @@ function NightingaleConnect() {
     institution: ''
   });
 
-  function handleLogin() {
+function handleLogin() {
+  // Test user credentials
+  if (authForm.email === 'test@nightingale.co.za' && authForm.password === 'demo123') {
     setIsLoggedIn(true);
     setShowAuth(false);
+  } else if (authForm.email === 'sarah@nightingale.co.za' && authForm.password === 'rural123') {
+    setIsLoggedIn(true);
+    setShowAuth(false);
+  } else {
+    alert('Invalid credentials. Try:\ntest@nightingale.co.za / demo123\nor\nsarah@nightingale.co.za / rural123');
   }
+}
 
   function handleRegisterStep1() {
     setRegistrationStep(2);
