@@ -9,6 +9,85 @@ function NightingaleConnect() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+const [showAuth, setShowAuth] = useState(false);
+const [authMode, setAuthMode] = useState('login');
+const [registrationStep, setRegistrationStep] = useState(1);
+const [activeTab, setActiveTab] = useState('dashboard');
+const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+// ADD THIS NEW QUESTIONS ARRAY:
+const [questions, setQuestions] = useState([
+  {
+    id: 1,
+    title: 'Hypertension management in rural settings',
+    content: 'What are the best practices for managing hypertension in patients with limited access to specialists? I\'m working in a remote clinic in Limpopo.',
+    author: 'Dr. Sarah Johnson',
+    specialty: 'Rural Health',
+    province: 'Limpopo',
+    votes: 12,
+    responses: 3,
+    tags: ['hypertension', 'rural', 'chronic-care'],
+    timestamp: '2 hours ago'
+  },
+  {
+    id: 2,
+    title: 'POPIA compliance for patient records',
+    content: 'How do we ensure POPIA compliance when sharing patient information for consultations?',
+    author: 'NP Maria Van Der Merwe',
+    specialty: 'Primary Care',
+    province: 'Western Cape',
+    votes: 8,
+    responses: 1,
+    tags: ['popia', 'compliance', 'telemedicine'],
+    timestamp: '5 hours ago'
+  },
+  {
+    id: 3,
+    title: 'Pediatric vaccination schedules post-COVID',
+    content: 'Have there been any updates to childhood vaccination schedules following COVID-19?',
+    author: 'Sister Jane Mthembu',
+    specialty: 'Pediatric Care',
+    province: 'KwaZulu-Natal',
+    votes: 15,
+    responses: 7,
+    tags: ['pediatric', 'vaccination', 'covid-19'],
+    timestamp: '1 day ago'
+  },
+  {
+    id: 4,
+    title: 'Mental health resources in townships',
+    content: 'What mental health resources are available for patients in township areas?',
+    author: 'NP Thabo Mokoena',
+    specialty: 'Mental Health',
+    province: 'Gauteng',
+    votes: 20,
+    responses: 12,
+    tags: ['mental-health', 'township', 'depression'],
+    timestamp: '2 days ago'
+  },
+  {
+    id: 5,
+    title: 'Diabetes management without glucometer strips',
+    content: 'How can we effectively manage diabetic patients when glucometer strips are in short supply?',
+    author: 'Dr. Nomsa Dlamini',
+    specialty: 'Endocrinology',
+    province: 'Mpumalanga',
+    votes: 18,
+    responses: 9,
+    tags: ['diabetes', 'resource-constraints', 'monitoring'],
+    timestamp: '3 days ago'
+  }
+]);
+
+// Keep your existing state declarations:
+const [authForm, setAuthForm] = useState({
+  email: '', 
+  password: '', 
+  firstName: '', 
+  lastName: ''
+});  
   const [authForm, setAuthForm] = useState({
     email: '', 
     password: '', 
@@ -599,14 +678,41 @@ return (
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs sm:text-sm text-gray-600">Active Questions</p>
-                  <p className="text-lg sm:text-2xl font-bold" style={{color: '#12464d'}}>15</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs sm:text-sm text-gray-600">Active Questions</p>
+                    <p className="text-lg sm:text-2xl font-bold" style={{color: '#12464d'}}>{questions.length}</p>
+                  </div>
+                  <span className="text-2xl">💬</span>
                 </div>
-                <span className="text-2xl">💬</span>
               </div>
-            </div>
+              <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs sm:text-sm text-gray-600">Total Responses</p>
+                    <p className="text-lg sm:text-2xl font-bold" style={{color: '#0f7c3a'}}>{questions.reduce((total, q) => total + q.responses, 0)}</p>
+                  </div>
+                  <span className="text-2xl">💬</span>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs sm:text-sm text-gray-600">Total Votes</p>
+                    <p className="text-lg sm:text-2xl font-bold" style={{color: '#7c2d12'}}>{questions.reduce((total, q) => total + q.votes, 0)}</p>
+                  </div>
+                  <span className="text-2xl">👍</span>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs sm:text-sm text-gray-600">Specialties</p>
+                    <p className="text-lg sm:text-2xl font-bold" style={{color: '#c2410c'}}>8</p>
+                  </div>
+                  <span className="text-2xl">🏥</span>
+                </div>
+              </div>
             <div className="bg-white rounded-lg shadow p-3 sm:p-4">
               <div className="flex items-center justify-between">
                 <div>
