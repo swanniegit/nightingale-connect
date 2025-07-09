@@ -11,7 +11,6 @@ import { Footer } from './components/Footer';
 import { useAuth } from './hooks/useAuth';
 import { useNavigation } from './hooks/useNavigation';
 import { mockQuestions } from './utils/mockData';
-import { APP_NAME } from './utils/constants';
 
 function App() {
   const {
