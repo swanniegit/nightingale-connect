@@ -5,22 +5,21 @@ import { initializeData } from "./init-data";
 import path from "path";
 
 const app = express();
+
+
+
+
 const staticPath = path.join(__dirname, "../dist/public");
-console.log("Serving static files from:", staticPath);
-app.use(express.static(staticPath));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(staticPath, "index.html"));
-});
+   console.log("Serving static files from:", staticPath);
+   app.use(express.static(staticPath));
+   app.get('*', (req, res) => {
+     res.sendFile(path.join(staticPath, "index.html"));
+   });
+   
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serve static files first
-app.use(express.static(path.join(__dirname, "../dist/public")));
 
-// Serve index.html for all other routes (SPA fallback)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/public/index.html"));
-});
 
 app.use((req, res, next) => {
   const start = Date.now();
