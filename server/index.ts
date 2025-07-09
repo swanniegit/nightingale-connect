@@ -5,6 +5,12 @@ import { initializeData } from "./init-data";
 import path from "path";
 
 const app = express();
+const staticPath = path.join(__dirname, "../dist/public");
+console.log("Serving static files from:", staticPath);
+app.use(express.static(staticPath));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(staticPath, "index.html"));
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
