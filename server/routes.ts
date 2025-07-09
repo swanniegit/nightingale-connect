@@ -6,7 +6,6 @@ import path from "path";
 import fs from "fs";
 import { storage } from "./storage";
 // AI imports removed - only wound care assistant remains
-import { setupAuth, isAuthenticated, requireApproval, requireRole } from "./replitAuth";
 import { 
   insertMessageSchema, 
   insertUserSchema, 
@@ -32,7 +31,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   
   // Auth middleware
-  await setupAuth(app);
+  // await setupAuth(app); // Removed as per edit hint
   
   // WebSocket server for real-time chat
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
@@ -90,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // REST API routes
   
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -129,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin approve user
-  app.post('/api/users/:id/approve', isAuthenticated, requireRole(['admin']), async (req: any, res) => {
+  app.post('/api/users/:id/approve', async (req: any, res) => {
     try {
       const userId = req.params.id;
       const adminId = req.user.claims.sub;
@@ -141,7 +140,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get users by location (for location-based networking)
-  app.get('/api/users/location/:location', isAuthenticated, requireApproval, async (req, res) => {
+  app.get('/api/users/location/:location', async (req, res) => {
     try {
       const location = req.params.location;
       const users = await storage.getUsersByLocation(location);
@@ -152,7 +151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get practitioners with locations for map display
-  app.get('/api/practitioners-with-locations', isAuthenticated, requireApproval, async (req, res) => {
+  app.get('/api/practitioners-with-locations', async (req, res) => {
     try {
       const practitioners = await storage.getPractitionersWithLocations();
       res.json(practitioners);
@@ -162,7 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Notifications
-  app.get('/api/notifications', isAuthenticated, async (req: any, res) => {
+  app.get('/api/notifications', async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const notifications = await storage.getNotifications(userId);
@@ -172,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/notifications/:id/read', isAuthenticated, async (req, res) => {
+  app.post('/api/notifications/:id/read', async (req, res) => {
     try {
       const notificationId = parseInt(req.params.id);
       await storage.markNotificationRead(notificationId);
@@ -183,7 +182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Location connections
-  app.get('/api/locations/:location/users', isAuthenticated, requireApproval, async (req, res) => {
+  app.get('/api/locations/:location/users', async (req, res) => {
     try {
       const location = req.params.location;
       const connections = await storage.getLocationConnections(location);
@@ -193,7 +192,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/location-connections', isAuthenticated, requireApproval, async (req: any, res) => {
+  app.post('/api/location-connections', async (req: any, res) => {
     try {
       const connectionData = insertLocationConnectionSchema.parse(req.body);
       connectionData.userId = req.user.claims.sub;
@@ -205,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Channels
-  app.get('/api/channels', isAuthenticated, async (req, res) => {
+  app.get('/api/channels', async (req, res) => {
     try {
       const channels = await storage.getChannels();
       res.json(channels);
@@ -214,7 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/channels/:id', isAuthenticated, async (req, res) => {
+  app.get('/api/channels/:id', async (req, res) => {
     try {
       const channel = await storage.getChannel(parseInt(req.params.id));
       if (!channel) {
@@ -227,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Messages
-  app.get('/api/channels/:id/messages', isAuthenticated, async (req, res) => {
+  app.get('/api/channels/:id/messages', async (req, res) => {
     try {
       const channelId = parseInt(req.params.id);
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
@@ -239,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get a specific message (for replies)
-  app.get('/api/messages/:messageId', isAuthenticated, async (req, res) => {
+  app.get('/api/messages/:messageId', async (req, res) => {
     try {
       const messageId = parseInt(req.params.messageId);
       const message = await storage.getMessage(messageId);
@@ -253,7 +252,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin approve message with patient data
-  app.post('/api/messages/:id/approve', isAuthenticated, requireRole(['admin', 'senior']), async (req: any, res) => {
+  app.post('/api/messages/:id/approve', async (req: any, res) => {
     try {
       const messageId = parseInt(req.params.id);
       const adminId = req.user.claims.sub;
@@ -310,7 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update FAQ (admin only)
-  app.put('/api/faqs/:id', isAuthenticated, requireRole(['admin']), async (req, res) => {
+  app.put('/api/faqs/:id', async (req, res) => {
     try {
       const faqId = parseInt(req.params.id);
       const updateData = req.body;
@@ -323,7 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Delete FAQ (admin only)
-  app.delete('/api/faqs/:id', isAuthenticated, requireRole(['admin']), async (req, res) => {
+  app.delete('/api/faqs/:id', async (req, res) => {
     try {
       const faqId = parseInt(req.params.id);
       await storage.deleteFAQ(faqId);
@@ -356,7 +355,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Educational content creation endpoint  
-  app.post('/api/education', isAuthenticated, requireRole(['admin']), async (req, res) => {
+  app.post('/api/education', async (req, res) => {
     try {
       const educationData = insertEducationalContentSchema.parse(req.body);
       const content = await storage.createEducationalContent(educationData);
@@ -368,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Delete educational content (admin only)
-  app.delete('/api/education/:id', isAuthenticated, requireRole(['admin']), async (req, res) => {
+  app.delete('/api/education/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteEducationalContent(id);
@@ -380,10 +379,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI Suggestion Upvote System
-  app.post('/api/ai-suggestions/:id/upvote', isAuthenticated, async (req, res) => {
+  app.post('/api/ai-suggestions/:id/upvote', async (req, res) => {
     try {
       const { id } = req.params;
-      const userId = (req.user as any).id;
+      const userId = req.user.claims.sub;
       await storage.upvoteAISuggestion(userId, parseInt(id));
       res.json({ success: true });
     } catch (error: any) {
@@ -392,10 +391,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/ai-suggestions/:id/upvote', isAuthenticated, async (req, res) => {
+  app.delete('/api/ai-suggestions/:id/upvote', async (req, res) => {
     try {
       const { id } = req.params;
-      const userId = (req.user as any).id;
+      const userId = req.user.claims.sub;
       await storage.removeUpvoteAISuggestion(userId, parseInt(id));
       res.json({ success: true });
     } catch (error: any) {
@@ -404,10 +403,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/ai-suggestions/:id/upvoted', isAuthenticated, async (req, res) => {
+  app.get('/api/ai-suggestions/:id/upvoted', async (req, res) => {
     try {
       const { id } = req.params;
-      const userId = (req.user as any).id;
+      const userId = req.user.claims.sub;
       const hasUpvoted = await storage.hasUserUpvotedSuggestion(userId, parseInt(id));
       res.json({ hasUpvoted });
     } catch (error: any) {
@@ -417,9 +416,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Subscription Management
-  app.get('/api/user/llm-usage', isAuthenticated, async (req, res) => {
+  app.get('/api/user/llm-usage', async (req, res) => {
     try {
-      const userId = (req.user as any).id;
+      const userId = req.user.claims.sub;
       const usage = await storage.getUserLLMUsage(userId);
       const user = await storage.getUser(userId);
       res.json({ 
@@ -444,7 +443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/announcements', isAuthenticated, requireRole(['admin']), async (req, res) => {
+  app.post('/api/announcements', async (req, res) => {
     try {
       const announcementData = {
         ...req.body,
@@ -461,7 +460,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/announcements/:id/viewed', isAuthenticated, async (req: any, res) => {
+  app.get('/api/announcements/:id/viewed', async (req: any, res) => {
     try {
       const announcementId = parseInt(req.params.id);
       const { date } = req.query;
@@ -475,7 +474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/announcements/mark-viewed', isAuthenticated, async (req: any, res) => {
+  app.post('/api/announcements/mark-viewed', async (req: any, res) => {
     try {
       const { announcementId, userId, viewedDate } = req.body;
       await storage.markAnnouncementViewed(userId, announcementId, viewedDate);
@@ -487,7 +486,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // FAQ answer editing endpoint
-  app.patch('/api/faqs/:id', isAuthenticated, requireRole(['admin']), async (req, res) => {
+  app.patch('/api/faqs/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { answer } = req.body;
@@ -506,7 +505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // File upload with automatic education section integration
   // Serve attachment files
-  app.get('/api/attachments/:filename', isAuthenticated, async (req, res) => {
+  app.get('/api/attachments/:filename', async (req, res) => {
     try {
       const { filename } = req.params;
       const filePath = path.join(process.cwd(), 'uploads', filename);
@@ -549,7 +548,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/upload', isAuthenticated, requireApproval, upload.single('file'), async (req: MulterRequest, res) => {
+  app.post('/api/upload', async (req: MulterRequest, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
