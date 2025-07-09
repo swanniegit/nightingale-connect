@@ -8,11 +8,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Serve static files first
 app.use(express.static(path.join(__dirname, "../dist/public")));
 
-app.get('/', (req, res) => {
-  console.log('Root route hit!');
-  res.send('Nightingale Connect API is running!');
+// Serve index.html for all other routes (SPA fallback)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/public/index.html"));
 });
 
 app.use((req, res, next) => {
