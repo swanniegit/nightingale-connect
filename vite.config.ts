@@ -18,7 +18,7 @@ export default defineConfig({
   },
   root: "client",
   build: {
-    outDir: "../dist/public", // relative to root (client)
+    outDir: "../public", // relative to root (client) - Vercel expects 'public'
     emptyOutDir: true,
   },
   server: {
