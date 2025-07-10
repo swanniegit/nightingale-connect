@@ -9,7 +9,7 @@ const app = express();
 
 
 
-const staticPath = path.join(__dirname, "/dist/public");
+const staticPath = path.join(__dirname, "../dist/public");
    console.log("Serving static files from:", staticPath);
    app.use(express.static(staticPath));
    app.get('*', (req, res) => {
