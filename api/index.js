@@ -66178,90 +66178,17 @@ async function setupVite(app2, server) {
   });
 }
 function serveStatic(app2) {
-  console.log("=== Static File Resolution Debug ===");
-  console.log(`__dirname: ${__dirname}`);
-  console.log(`process.cwd(): ${process.cwd()}`);
-  console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-  console.log(`VERCEL: ${process.env.VERCEL}`);
-  const isVercel = process.env.VERCEL === "1";
-  if (isVercel && process.env.NODE_ENV === "production") {
-    console.log("=== Vercel production detected - skipping static file serving ===");
-    console.log("Static files are handled by Vercel's static build");
-    app2.use("*", (req, res) => {
-      if (!req.path.startsWith("/api/")) {
-        res.status(200).send(`
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <title>Nightingale Connect</title>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1">
-            </head>
-            <body>
-              <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
-                <div style="text-align: center;">
-                  <h1>Nightingale Connect</h1>
-                  <p>Loading...</p>
-                  <p style="color: #666; font-size: 14px;">Redirecting to static files...</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `);
-      } else {
-        res.status(404).json({ error: "API route not found" });
-      }
-    });
+  if (process.env.NODE_ENV === "production") {
+    console.log("Production mode - static files handled by Vercel");
     return;
   }
-  const possiblePaths = [
-    import_path28.default.resolve(__dirname, "public"),
-    // When copied to api/public
-    import_path28.default.resolve(__dirname, "..", "dist", "public"),
-    import_path28.default.resolve(__dirname, "dist", "public"),
-    import_path28.default.resolve(process.cwd(), "dist", "public"),
-    import_path28.default.resolve(process.cwd(), "public"),
-    // Fallback
-    import_path28.default.resolve(__dirname, "..", "public"),
-    // Another fallback
-    import_path28.default.resolve(__dirname, "..", "..", "public"),
-    // Additional fallback
-    import_path28.default.resolve(__dirname, "..", "..", "dist", "public"),
-    // Additional fallback
-    import_path28.default.resolve(__dirname, "..", "..", "..", "public"),
-    // Additional fallback
-    import_path28.default.resolve(__dirname, "..", "..", "..", "dist", "public")
-    // Additional fallback
-  ];
-  let distPath = null;
-  console.log("Checking paths for static files:");
-  for (const testPath of possiblePaths) {
-    const exists2 = import_fs2.default.existsSync(testPath);
-    console.log(`  ${exists2 ? "\u2713" : "\u2717"} ${testPath}`);
-    if (exists2) {
-      distPath = testPath;
-      break;
-    }
-  }
-  if (!distPath) {
-    console.error("=== No static files found ===");
-    console.error("Tried the following paths for static files:");
-    possiblePaths.forEach((p2) => console.error(`  - ${p2}`));
-    app2.use("*", (_req, res) => {
-      res.status(404).json({
-        error: "Static files not found",
-        message: "The client build files are not available. Please ensure the build completed successfully.",
-        debug: {
-          __dirname,
-          cwd: process.cwd(),
-          nodeEnv: process.env.NODE_ENV,
-          isVercel
-        }
-      });
-    });
+  const distPath = import_path28.default.resolve(process.cwd(), "dist", "public");
+  if (!import_fs2.default.existsSync(distPath)) {
+    console.error(`Static files not found at: ${distPath}`);
+    console.error("Run 'npm run build:client' to build the client");
     return;
   }
-  console.log(`=== Serving static files from: ${distPath} ===`);
+  console.log(`Serving static files from: ${distPath}`);
   app2.use(import_express.default.static(distPath));
   app2.use("*", (_req, res) => {
     res.sendFile(import_path28.default.resolve(distPath, "index.html"));
