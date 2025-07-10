@@ -10,9 +10,10 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": "/client/src",
+      "@": "client/src",
       "@shared": "shared",
       "@assets": "attached_assets",
+      "client/src": "/client/src",
     },
   },
   root: "client",
