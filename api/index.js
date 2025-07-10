@@ -66179,11 +66179,19 @@ async function setupVite(app2, server) {
 }
 function serveStatic(app2) {
   const possiblePaths = [
+    import_path28.default.resolve(__dirname, "public"),
+    // When copied to api/public
     import_path28.default.resolve(__dirname, "..", "dist", "public"),
     import_path28.default.resolve(__dirname, "dist", "public"),
     import_path28.default.resolve(process.cwd(), "dist", "public"),
-    "/var/task/dist/public"
+    "/var/task/public",
+    // Vercel deployment path (api/public)
+    "/var/task/dist/public",
     // Vercel deployment path
+    import_path28.default.resolve(process.cwd(), "public"),
+    // Fallback
+    import_path28.default.resolve(__dirname, "..", "public")
+    // Another fallback
   ];
   let distPath = null;
   for (const testPath of possiblePaths) {
@@ -66193,11 +66201,16 @@ function serveStatic(app2) {
     }
   }
   if (!distPath) {
-    console.error("Tried the following paths for dist/public:");
+    console.error("Tried the following paths for static files:");
     possiblePaths.forEach((p2) => console.error(`  - ${p2}`));
-    throw new Error(
-      `Could not find the build directory, make sure to build the client first`
-    );
+    console.log("Static files not found, serving fallback response");
+    app2.use("*", (_req, res) => {
+      res.status(404).json({
+        error: "Static files not found",
+        message: "The client build files are not available. Please ensure the build completed successfully."
+      });
+    });
+    return;
   }
   console.log(`Serving static files from: ${distPath}`);
   app2.use(import_express.default.static(distPath));
