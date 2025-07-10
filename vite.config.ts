@@ -13,7 +13,6 @@ export default defineConfig({
       "@": "client/src",
       "@shared": "shared",
       "@assets": "attached_assets",
-      "client/src": "/client/src",
     },
   },
   root: "client",
