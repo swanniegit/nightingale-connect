@@ -202,6 +202,15 @@ export class DatabaseStorage implements IStorage {
     );
   }
 
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users);
+  }
+
   // Channels
   async getChannels(): Promise<Channel[]> {
     return await db.select().from(channels).orderBy(desc(channels.createdAt));

@@ -629,5 +629,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ token });
   });
 
+  // TEMP: Debug route to list all users (for testing only, remove in production)
+  app.get('/api/debug/users', async (req, res) => {
+    try {
+      const users = await storage.getAllUsers?.();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  });
+
   return httpServer;
 }
