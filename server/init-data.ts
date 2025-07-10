@@ -63,60 +63,54 @@ export async function initializeData() {
     }).returning();
 
     // Create sample FAQs
-    await db.insert(faqs).values([
-      {
-        question: "What are the standard vital signs ranges for adults?",
-        answer: "Normal vital signs for adults: Temperature 36.1-37.2°C, Heart rate 60-100 bpm, Respiratory rate 12-20 breaths/min, Blood pressure <120/80 mmHg. These ranges may vary based on individual circumstances and medical conditions.",
-        category: "Clinical Guidelines",
-        tags: ["vital signs", "monitoring", "assessment"],
-        authorId: seniorUser.id,
-      },
-      {
-        question: "How do I calculate medication dosages?",
-        answer: "Use the formula: Dose = (Desired dose / Stock strength) × Stock volume. Always double-check calculations and follow the 'five rights' of medication administration: right patient, right drug, right dose, right route, right time.",
-        category: "Medication Administration",
-        tags: ["medication", "dosage", "safety"],
-        authorId: seniorUser.id,
-      },
-      {
-        question: "What is the proper hand hygiene protocol?",
-        answer: "Wash hands for at least 20 seconds with soap and water, or use alcohol-based hand sanitizer (60-95% alcohol). Key moments: before patient contact, before aseptic procedures, after body fluid exposure, after patient contact, after contact with patient surroundings.",
-        category: "Infection Control",
-        tags: ["hand hygiene", "infection control", "safety"],
-        authorId: adminUser.id,
-      }
-    ]);
+    await db.insert(faqs).values({
+      question: "What are the standard vital signs ranges for adults?",
+      answer: "Normal vital signs for adults: Temperature 36.1-37.2°C, Heart rate 60-100 bpm, Respiratory rate 12-20 breaths/min, Blood pressure <120/80 mmHg. These ranges may vary based on individual circumstances and medical conditions.",
+      category: "Clinical Guidelines",
+      tags: ["vital signs", "monitoring", "assessment"],
+    });
+
+    await db.insert(faqs).values({
+      question: "How do I calculate medication dosages?",
+      answer: "Use the formula: Dose = (Desired dose / Stock strength) × Stock volume. Always double-check calculations and follow the 'five rights' of medication administration: right patient, right drug, right dose, right route, right time.",
+      category: "Medication Administration",
+      tags: ["medication", "dosage", "safety"],
+    });
+
+    await db.insert(faqs).values({
+      question: "What is the proper hand hygiene protocol?",
+      answer: "Wash hands for at least 20 seconds with soap and water, or use alcohol-based hand sanitizer (60-95% alcohol). Key moments: before patient contact, before aseptic procedures, after body fluid exposure, after patient contact, after contact with patient surroundings.",
+      category: "Infection Control",
+      tags: ["hand hygiene", "infection control", "safety"],
+    });
 
     // Create sample educational content
-    await db.insert(educationalContent).values([
-      {
-        title: "Nursing Assessment Guidelines",
-        content: "Comprehensive nursing assessment includes physical examination, health history, psychosocial assessment, and functional assessment. Document findings accurately and report significant changes to the healthcare team.",
-        contentType: "document",
-        category: "Clinical Practice",
-        tags: ["assessment", "documentation", "clinical practice"],
-        authorId: seniorUser.id,
-        isFeatured: true,
-      },
-      {
-        title: "Emergency Response Protocols",
-        content: "In medical emergencies: 1) Ensure scene safety, 2) Assess responsiveness, 3) Call for help, 4) Begin CPR if needed, 5) Use AED if available, 6) Continue until advanced help arrives. Know your facility's emergency codes and procedures.",
-        contentType: "protocol",
-        category: "Emergency Care",
-        tags: ["emergency", "CPR", "protocols"],
-        authorId: adminUser.id,
-        isFeatured: true,
-      },
-      {
-        title: "Patient Communication Best Practices",
-        content: "Effective communication includes active listening, empathy, clear explanations, cultural sensitivity, and maintaining patient confidentiality. Use therapeutic communication techniques and involve patients in their care decisions.",
-        contentType: "guide",
-        category: "Patient Care",
-        tags: ["communication", "patient care", "therapeutic"],
-        authorId: seniorUser.id,
-        isFeatured: false,
-      }
-    ]);
+    await db.insert(educationalContent).values({
+      title: "Nursing Assessment Guidelines",
+      content: "Comprehensive nursing assessment includes physical examination, health history, psychosocial assessment, and functional assessment. Document findings accurately and report significant changes to the healthcare team.",
+      contentType: "document",
+      category: "Clinical Practice",
+      tags: ["assessment", "documentation", "clinical practice"],
+      isFeatured: true,
+    });
+
+    await db.insert(educationalContent).values({
+      title: "Emergency Response Protocols",
+      content: "In medical emergencies: 1) Ensure scene safety, 2) Assess responsiveness, 3) Call for help, 4) Begin CPR if needed, 5) Use AED if available, 6) Continue until advanced help arrives. Know your facility's emergency codes and procedures.",
+      contentType: "protocol",
+      category: "Emergency Care",
+      tags: ["emergency", "CPR", "protocols"],
+      isFeatured: true,
+    });
+
+    await db.insert(educationalContent).values({
+      title: "Patient Communication Best Practices",
+      content: "Effective communication includes active listening, empathy, clear explanations, cultural sensitivity, and maintaining patient confidentiality. Use therapeutic communication techniques and involve patients in their care decisions.",
+      contentType: "guide",
+      category: "Patient Care",
+      tags: ["communication", "patient care", "therapeutic"],
+      isFeatured: false,
+    });
 
     console.log("Sample data initialized successfully!");
     console.log(`Created users: ${adminUser.username}, ${seniorUser.username}, ${nurseUser.username}`);

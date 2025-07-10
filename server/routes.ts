@@ -19,6 +19,14 @@ interface MulterRequest extends Request {
   file?: any;
 }
 
+interface AuthenticatedRequest extends Request {
+  user?: {
+    claims: {
+      sub: string;
+    };
+  };
+}
+
 // Simple AI suggestion function that matches messages with FAQ keywords
 // AI suggestions removed - chat is now simple messaging only
 
@@ -379,10 +387,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI Suggestion Upvote System
-  app.post('/api/ai-suggestions/:id/upvote', async (req, res) => {
+  app.post('/api/ai-suggestions/:id/upvote', async (req: AuthenticatedRequest, res) => {
     try {
       const { id } = req.params;
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims.sub;
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
       await storage.upvoteAISuggestion(userId, parseInt(id));
       res.json({ success: true });
     } catch (error: any) {
@@ -391,10 +402,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/ai-suggestions/:id/upvote', async (req, res) => {
+  app.delete('/api/ai-suggestions/:id/upvote', async (req: AuthenticatedRequest, res) => {
     try {
       const { id } = req.params;
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims.sub;
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
       await storage.removeUpvoteAISuggestion(userId, parseInt(id));
       res.json({ success: true });
     } catch (error: any) {
@@ -403,10 +417,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/ai-suggestions/:id/upvoted', async (req, res) => {
+  app.get('/api/ai-suggestions/:id/upvoted', async (req: AuthenticatedRequest, res) => {
     try {
       const { id } = req.params;
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims.sub;
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
       const hasUpvoted = await storage.hasUserUpvotedSuggestion(userId, parseInt(id));
       res.json({ hasUpvoted });
     } catch (error: any) {
@@ -416,9 +433,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Subscription Management
-  app.get('/api/user/llm-usage', async (req, res) => {
+  app.get('/api/user/llm-usage', async (req: AuthenticatedRequest, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims.sub;
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
       const usage = await storage.getUserLLMUsage(userId);
       const user = await storage.getUser(userId);
       res.json({ 
