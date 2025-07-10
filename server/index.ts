@@ -1,6 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 import { initializeData } from "./init-data";
 import path from "path";
 
@@ -35,7 +34,7 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(logLine);
     }
   });
 
@@ -65,8 +64,12 @@ async function initializeApp() {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
+    // Dynamically import vite setup only in development
+    const { setupVite } = await import("./vite");
     await setupVite(app, server);
   } else {
+    // Dynamically import static serving only in production
+    const { serveStatic } = await import("./vite");
     serveStatic(app);
   }
 
@@ -80,7 +83,7 @@ if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
     
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
-      log(`serving on port ${port}`);
+      console.log(`serving on port ${port}`);
     });
   })();
 }
