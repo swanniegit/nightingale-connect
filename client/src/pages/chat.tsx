@@ -196,7 +196,7 @@ export default function Chat() {
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/user-guide">
+                    <Link href="/user-guide" >
                       <Settings className="w-4 h-4 mr-2" />
                       User Guide
                     </Link>
