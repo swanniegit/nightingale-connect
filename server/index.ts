@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { initializeData } from "./init-data";
 import path from "path";
+import jwt from 'jsonwebtoken';
 
 const app = express();
 
@@ -10,6 +11,20 @@ const app = express();
    
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use((req: any, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev_secret');
+      req.user = { claims: decoded };
+    } catch (err) {
+      // Invalid token, leave req.user undefined
+    }
+  }
+  next();
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

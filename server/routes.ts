@@ -14,6 +14,7 @@ import {
   insertLocationConnectionSchema,
   insertEducationalContentSchema
 } from "@shared/schema";
+import jwt from 'jsonwebtoken';
 
 interface MulterRequest extends Request {
   file?: any;
@@ -99,7 +100,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.get('/api/auth/user', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       const user = await storage.getUser(userId);
       res.json(user);
     } catch (error: any) {
@@ -139,7 +143,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/users/:id/approve', async (req: any, res) => {
     try {
       const userId = req.params.id;
-      const adminId = req.user.claims.sub;
+      const adminId = req.user?.claims?.sub;
+      if (!adminId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       await storage.approveUser(userId, adminId);
       res.json({ success: true });
     } catch (error: any) {
@@ -171,7 +178,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Notifications
   app.get('/api/notifications', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       const notifications = await storage.getNotifications(userId);
       res.json(notifications);
     } catch (error: any) {
@@ -203,7 +213,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/location-connections', async (req: any, res) => {
     try {
       const connectionData = insertLocationConnectionSchema.parse(req.body);
-      connectionData.userId = req.user.claims.sub;
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      connectionData.userId = userId;
       const connection = await storage.createLocationConnection(connectionData);
       res.json(connection);
     } catch (error: any) {
@@ -263,7 +277,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/messages/:id/approve', async (req: any, res) => {
     try {
       const messageId = parseInt(req.params.id);
-      const adminId = req.user.claims.sub;
+      const adminId = req.user?.claims?.sub;
+      if (!adminId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       await storage.approveMessage(messageId, adminId);
       res.json({ success: true });
     } catch (error: any) {
@@ -596,6 +613,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
+  });
+
+  // Sample login route (demo only)
+  app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    // Replace with your real user lookup and password check
+    const user = await storage.getUserByUsername?.(username);
+    // Dummy password check for demo: password must be 'password'
+    if (!user || password !== 'password') {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    // You can add more claims as needed
+    const token = jwt.sign({ sub: user.id, username: user.username }, process.env.JWT_SECRET || 'dev_secret', { expiresIn: '1d' });
+    res.json({ token });
   });
 
   return httpServer;
