@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
 import { Paperclip, Send, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast.ts';
 import { Message } from '@shared/schema';
 
 interface ChatInputProps {

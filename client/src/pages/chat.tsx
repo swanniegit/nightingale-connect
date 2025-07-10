@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { useWebSocket } from '@/hooks/useWebSocket';
-import { useAuth } from '@/hooks/useAuth';
-import { Message } from '@shared/schema';
-import ChatMessage from '@/components/chat/ChatMessage';
-import ChatInput from '@/components/chat/ChatInput';
+import { Button } from '@/components/ui/button.tsx';
+import { useWebSocket } from '@/hooks/useWebSocket.ts';
+import { useAuth } from '@/hooks/useAuth.ts';
+import { Message } from '@shared/schema.ts';
+import ChatMessage from '@/components/chat/ChatMessage.tsx';
+import ChatInput from '@/components/chat/ChatInput.tsx';
 // AI components removed from chat
-import FAQModal from '@/components/modals/FAQModal';
-import EducationModal from '@/components/modals/EducationModal';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import FAQModal from '@/components/modals/FAQModal.tsx';
+import EducationModal from '@/components/modals/EducationModal.tsx';
+import { ScrollArea } from '@/components/ui/scroll-area.tsx';
 import { User, MessageCircle, GraduationCap, HelpCircle, MapPin, LogOut, Settings } from 'lucide-react';
 import { Link } from 'wouter';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu.tsx';
 import nightingaleLogoCircle from '@/assets/nightingale-logo-circle.jpg';
 
 const CURRENT_CHANNEL_ID = 1;
@@ -22,7 +22,7 @@ export default function Chat() {
   const [showFAQ, setShowFAQ] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
   const [highlightFaqId, setHighlightFaqId] = useState<number | undefined>();
-  const [initialMessages, setInitialMessages] = useState([]);
+  const [initialMessages, setInitialMessages] = useState<Message[]>([]);
   const [replyToMessage, setReplyToMessage] = useState<Message | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   
@@ -57,22 +57,22 @@ export default function Chat() {
   }
 
   // Fetch initial messages
-  const { data: existingMessages } = useQuery({
+  const { data: existingMessages = [] } = useQuery<Message[]>({
     queryKey: [`/api/channels/${CURRENT_CHANNEL_ID}/messages`],
     enabled: isConnected,
   });
 
   // Fetch channel info
-  const { data: channel } = useQuery({
+  const { data: channel } = useQuery<{ name?: string }>({
     queryKey: [`/api/channels/${CURRENT_CHANNEL_ID}`],
   });
 
   // Combine existing messages with new ones, avoiding duplicates
   const existingMessageIds = new Set((existingMessages || []).map(msg => msg.id));
-  const allMessages = [...(existingMessages || [])];
+  const allMessages: Message[] = [...(existingMessages || [])];
   
   // Add new WebSocket messages that aren't already in existingMessages
-  messages.forEach(newMessage => {
+  messages.forEach((newMessage: Message) => {
     if (!existingMessageIds.has(newMessage.id)) {
       allMessages.push(newMessage);
     }
@@ -184,12 +184,16 @@ export default function Chat() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <div className="px-2 py-1.5 text-sm font-medium text-gray-700">
-                    {user?.username || 'User'}
-                  </div>
-                  <div className="px-2 py-1 text-xs text-gray-500 capitalize">
-                    {user?.role || 'nurse'}
-                  </div>
+                  {user && (
+                    <div className="px-2 py-1.5 text-sm font-medium text-gray-700">
+                      {user.username || 'User'}
+                    </div>
+                  )}
+                  {user && (
+                    <div className="px-2 py-1 text-xs text-gray-500 capitalize">
+                      {user.role || 'nurse'}
+                    </div>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/user-guide">
@@ -224,11 +228,11 @@ export default function Chat() {
             </div>
 
             {/* Messages */}
-            {allMessages.map((message, index) => (
+            {allMessages.map((message: Message, index: number) => (
               <div key={message.id || index} className="space-y-3">
                 <ChatMessage 
                   message={message} 
-                  isCurrentUser={message.userId === user.id}
+                  isCurrentUser={user && message.userId === user.id}
                   onReply={handleReply}
                 />
               </div>

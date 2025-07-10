@@ -1,13 +1,26 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAuth } from "@/hooks/useAuth.ts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Badge } from "@/components/ui/badge.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin, Phone, Mail, Navigation, Search, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+
+type Practitioner = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  isOnline?: boolean;
+  practiceAddress?: string;
+  practiceCity?: string;
+  practiceProvince?: string;
+  location?: string;
+  [key: string]: any;
+};
 
 export default function PractitionersMap() {
   const { user } = useAuth();
@@ -15,7 +28,7 @@ export default function PractitionersMap() {
   const [selectedProvince, setSelectedProvince] = useState('');
 
   // Fetch practitioners with locations
-  const { data: practitioners = [], isLoading } = useQuery({
+  const { data: practitioners = [], isLoading } = useQuery<Practitioner[]>({
     queryKey: ['/api/practitioners-with-locations', { location: searchLocation }],
     enabled: !!user,
   });

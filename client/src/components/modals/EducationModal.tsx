@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { ScrollArea } from '@/components/ui/scroll-area.tsx';
+import { Badge } from '@/components/ui/badge.tsx';
 import { Search, ClipboardCheck, Pill, Video, Star, Download, Eye, FileText, Plus, Edit3, Trash2 } from 'lucide-react';
 import { EducationalContent } from '@shared/schema';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { apiRequest, queryClient } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth.ts';
+import { Button } from '@/components/ui/button.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
+import { apiRequest, queryClient } from '@/lib/queryClient.ts';
+import { useToast } from '@/hooks/use-toast.ts';
 
 interface EducationModalProps {
   isOpen: boolean;

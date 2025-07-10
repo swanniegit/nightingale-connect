@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { ScrollArea } from '@/components/ui/scroll-area.tsx';
 import { Send, Bot, AlertTriangle } from 'lucide-react';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/queryClient.ts';
 
 interface ChatMessage {
   id: string;
@@ -104,35 +104,31 @@ export default function WoundCareChat() {
               className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  message.isUser
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-purple-50 border border-purple-200 text-gray-800'
-                }`}
+                className={`
+                  max-w-[80%] rounded-lg p-3 ${
+                    message.isUser
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                  }
+                `}
               >
-                {!message.isUser && (
-                  <div className="flex items-center gap-2 mb-2">
-                    <Bot className="h-4 w-4 text-purple-600" />
-                    <span className="text-sm font-medium text-purple-700">Wound Care Assistant</span>
+                <div className="flex items-start gap-2">
+                  {!message.isUser && (
+                    <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  )}
+                  <div className="text-sm whitespace-pre-wrap">
+                    {message.content}
                   </div>
-                )}
-                <p className="whitespace-pre-wrap">{message.content}</p>
-                <p className={`text-xs mt-2 ${message.isUser ? 'text-blue-100' : 'text-gray-500'}`}>
-                  {message.timestamp.toLocaleTimeString()}
-                </p>
+                </div>
               </div>
             </div>
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+              <div className="bg-gray-100 text-gray-900 max-w-[80%] rounded-lg p-3">
                 <div className="flex items-center gap-2">
-                  <Bot className="h-4 w-4 text-purple-600" />
-                  <span className="text-sm font-medium text-purple-700">Wound Care Assistant</span>
-                </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="animate-spin w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full"></div>
-                  <span className="text-sm text-gray-600">Analyzing your question...</span>
+                  <Bot className="h-4 w-4" />
+                  <div className="text-sm">Thinking...</div>
                 </div>
               </div>
             </div>
@@ -145,11 +141,11 @@ export default function WoundCareChat() {
         <Input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Ask about wound care, dressing selection, assessment protocols..."
+          placeholder="Ask about wound care..."
           disabled={isLoading}
-          className="flex-1 min-w-0"
+          className="flex-1"
         />
-        <Button type="submit" disabled={!inputValue.trim() || isLoading} className="flex-shrink-0 px-3">
+        <Button type="submit" disabled={isLoading || !inputValue.trim()}>
           <Send className="h-4 w-4" />
         </Button>
       </form>

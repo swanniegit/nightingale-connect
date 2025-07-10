@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Badge } from "@/components/ui/badge.tsx";
 import { Bell, MessageSquare, Users, MapPin, FileText, LogOut, Megaphone, BookOpen, BarChart3, HelpCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
-import AnnouncementModal from "@/components/modals/AnnouncementModal";
-import FAQModal from "@/components/modals/FAQModal";
-import EducationModal from "@/components/modals/EducationModal";
+import AnnouncementModal from "@/components/modals/AnnouncementModal.tsx";
+import FAQModal from "@/components/modals/FAQModal.tsx";
+import EducationModal from "@/components/modals/EducationModal.tsx";
 import nightingaleLogoFull from '@/assets/nightingale-logo-full.jpg';
 
 export default function Home() {

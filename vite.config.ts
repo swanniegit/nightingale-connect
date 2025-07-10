@@ -13,6 +13,7 @@ export default defineConfig({
       "@": "client/src",
       "@shared": "shared",
       "@assets": "attached_assets",
+      "useAuth": "useAuth.ts",
     },
   },
   root: "client",

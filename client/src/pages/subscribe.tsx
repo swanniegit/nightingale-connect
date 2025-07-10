@@ -1,9 +1,9 @@
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { CheckCircle, Brain, Zap, Clock, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/queryClient.ts";
 import { Link } from "wouter";
 
 export default function Subscribe() {

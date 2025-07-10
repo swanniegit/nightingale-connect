@@ -1,8 +1,8 @@
 import { AISuggestion as AISuggestionType } from '@shared/schema';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.tsx';
 import { Bot, Brain, ExternalLink, AlertTriangle, Lock } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/queryClient.ts';
 
 interface AISuggestionProps {
   suggestion: AISuggestionType;
@@ -87,57 +87,4 @@ export default function AISuggestion({
                       className="text-xs h-auto py-1 px-2"
                     >
                       <ExternalLink className="w-3 h-3 mr-1" />
-                      {faq.question.length > 50 ? `${faq.question.substring(0, 50)}...` : faq.question}
-                    </Button>
-                  ) : null;
-                })}
-              </div>
-            </div>
-          )}
-          
-          {/* Education References for local suggestions */}
-          {!isLLM && !isUpgrade && suggestion.educationReferences.length > 0 && (
-            <div className="mb-3">
-              <p className="text-xs text-gray-600 mb-2">Related Education:</p>
-              <div className="flex flex-wrap gap-2">
-                {suggestion.educationReferences.map((eduId) => {
-                  const education = educationData?.find((e: any) => e.id === eduId);
-                  return education ? (
-                    <Button
-                      key={eduId}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onOpenEducation(eduId)}
-                      className="text-xs h-auto py-1 px-2"
-                    >
-                      <ExternalLink className="w-3 h-3 mr-1" />
-                      {education.title.length > 50 ? `${education.title.substring(0, 50)}...` : education.title}
-                    </Button>
-                  ) : null;
-                })}
-              </div>
-            </div>
-          )}
-          
-          <div className={`flex items-center justify-between pt-3 border-t ${isLLM ? 'border-purple-200' : 'border-yellow-200'}`}>
-            <div className="flex items-center space-x-4">
-              {/* AI Disclaimer */}
-              <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <AlertTriangle className="w-3 h-3" />
-                <span>AI can make mistakes. This response will clear when you refresh or log out.</span>
-              </div>
-              
-              {/* Show upgrade message for subscription limit */}
-              {isUpgrade && (
-                <div className="flex items-center space-x-2 text-orange-600">
-                  <Lock className="w-4 h-4" />
-                  <span className="text-xs font-medium">Premium Feature</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+                      {faq.question.length > 50 ? `${faq.question.substring(0, 50)}...`

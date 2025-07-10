@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Label } from '@/components/ui/label.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { Calendar } from '@/components/ui/calendar.tsx';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx';
+import { cn } from '@/lib/utils.ts';
 import { CalendarIcon, Upload, X } from 'lucide-react';
 import { format } from 'date-fns';
-import { apiRequest, queryClient } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { apiRequest, queryClient } from '@/lib/queryClient.ts';
+import { useToast } from '@/hooks/use-toast.ts';
+import { useAuth } from '@/hooks/useAuth.ts';
 
 interface AnnouncementModalProps {
   isOpen: boolean;

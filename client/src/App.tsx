@@ -3,15 +3,15 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
-import { useAuth } from "@/hooks/useAuth";
-import NotFound from "@/pages/not-found";
-import Chat from "@/pages/chat";
-import Home from "@/pages/home";
-import Landing from "@/pages/landing";
-import PractitionersMap from "@/pages/practitioners-map";
-import UserGuide from "@/pages/user-guide";
-import Subscribe from "@/pages/subscribe";
-import AnnouncementBanner from "@/components/AnnouncementBanner";
+import { useAuth } from "@/hooks/useAuth.ts";
+import NotFound from "@/pages/not-found.tsx";
+import Chat from "@/pages/chat.tsx";
+import Home from "@/pages/home.tsx";
+import Landing from "@/pages/landing.tsx";
+import PractitionersMap from "@/pages/practitioners-map.tsx";
+import UserGuide from "@/pages/user-guide.tsx";
+import Subscribe from "@/pages/subscribe.tsx";
+import AnnouncementBanner from "@/components/AnnouncementBanner.tsx";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();

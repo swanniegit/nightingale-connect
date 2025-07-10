@@ -1,7 +1,7 @@
 import { formatDistanceToNow } from 'date-fns';
 import { Message } from '@shared/schema';
 import { FileText, Download, Reply } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.tsx';
 import { useQuery } from '@tanstack/react-query';
 
 interface ChatMessageProps {

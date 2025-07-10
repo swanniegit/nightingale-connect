@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Label } from '@/components/ui/label.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { ScrollArea } from '@/components/ui/scroll-area.tsx';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
 import { Search, ChevronDown, Pill, Heart, Gavel, Edit, Trash2, X, Save, Plus, Edit3, MessageSquare } from 'lucide-react';
 import { FAQ } from '@shared/schema';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import WoundCareChat from '@/components/chat/WoundCareChat';
+import { apiRequest } from '@/lib/queryClient.ts';
+import { useToast } from '@/hooks/use-toast.ts';
+import { useAuth } from '@/hooks/useAuth.ts';
+import WoundCareChat from '@/components/chat/WoundCareChat.tsx';
 
 interface FAQModalProps {
   isOpen: boolean;

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { X, ExternalLink, Download, FileText } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { Dialog, DialogContent } from '@/components/ui/dialog.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { Badge } from '@/components/ui/badge.tsx';
+import { X, Download, ExternalLink, FileText } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth.ts';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest, queryClient } from '@/lib/queryClient';
+import { apiRequest, queryClient } from '@/lib/queryClient.ts';
 import { Announcement } from '@shared/schema';
+import nightingaleLogoFull from '@/assets/nightingale-logo-full.jpg';
 
 export default function AnnouncementBanner() {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ export default function AnnouncementBanner() {
   const [currentAnnouncement, setCurrentAnnouncement] = useState<Announcement | null>(null);
 
   // Get active announcements
-  const { data: announcements } = useQuery({
+  const { data: announcements = [] } = useQuery<Announcement[]>({
     queryKey: ['/api/announcements/active'],
     enabled: !!user,
   });
