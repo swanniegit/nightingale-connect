@@ -6,20 +6,11 @@ import path from "path";
 
 const app = express();
 
-
-
-
-const staticPath = path.join(__dirname, "../dist/public");
-   console.log("Serving static files from:", staticPath);
-   app.use(express.static(staticPath));
-   app.get('*', (req, res) => {
-     res.sendFile(path.join(staticPath, "index.html"));
-   });
+// Static file serving will be handled by serveStatic() in production
+// and setupVite() in development
    
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -51,7 +42,12 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+// Initialize the app
+let isInitialized = false;
+
+async function initializeApp() {
+  if (isInitialized) return;
+  
   const server = await registerRoutes(app);
   
   // Initialize sample data
@@ -74,14 +70,23 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
+  isInitialized = true;
+}
 
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    log(`serving on port ${port}`);
-  });
+// For traditional deployment (Railway, etc.)
+if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
+  (async () => {
+    await initializeApp();
+    
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      log(`serving on port ${port}`);
+    });
+  })();
+}
 
- 
-})();
+// For Vercel deployment
+export default async function handler(req: Request, res: Response) {
+  await initializeApp();
+  return app(req, res);
+}
