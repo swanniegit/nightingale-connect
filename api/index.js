@@ -1,14 +1,31 @@
 // Vercel serverless function entry point
-import express from 'express';
-import { registerRoutes } from '../server/routes.js';
-import { serveStatic } from '../server/vite.js';
-import { initializeData } from '../server/init-data.js';
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Simple static file serving for production
+function serveStatic(app) {
+  const distPath = path.resolve(__dirname, '..', 'dist', 'public');
+
+  if (!fs.existsSync(distPath)) {
+    console.error(`Could not find the build directory: ${distPath}`);
+    return;
+  }
+
+  console.log('Serving static files from:', distPath);
+  app.use(express.static(distPath));
+
+  // fall through to index.html if the file doesn't exist
+  app.use("*", (_req, res) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
+  });
+}
 
 // Initialize the app
 let isInitialized = false;
@@ -17,22 +34,12 @@ async function initializeApp() {
   if (isInitialized) return;
   
   try {
-    const server = await registerRoutes(app);
-    
-    // Initialize sample data
-    await initializeData();
-
-    // Error handling middleware
-    app.use((err: any, _req: any, res: any, _next: any) => {
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
-      res.status(status).json({ message });
-    });
-
-    // Serve static files in production
+    // For now, just serve static files
+    // We can add database and routes later
     serveStatic(app);
-
+    
     isInitialized = true;
+    console.log('App initialized successfully');
   } catch (error) {
     console.error('Error initializing app:', error);
     throw error;
@@ -40,13 +47,13 @@ async function initializeApp() {
 }
 
 // Vercel serverless function handler
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
   try {
     await initializeApp();
     
     // Handle the request
     return new Promise((resolve, reject) => {
-      app(req, res, (err: any) => {
+      app(req, res, (err) => {
         if (err) {
           console.error('Express error:', err);
           reject(err);
@@ -59,4 +66,4 @@ export default async function handler(req: any, res: any) {
     console.error('Handler error:', error);
     res.status(500).json({ error: 'Internal server error', details: error.message });
   }
-} 
+}; 
