@@ -24,9 +24,9 @@ A secure, scalable Node.js/Express backend with PostgreSQL database, real-time W
 - **Helmet Security**: Security headers and CSP configuration
 
 ### Database
-- **PostgreSQL**: Primary database with Neon Database integration
+- **PostgreSQL**: Primary database with Supabase integration
 - **Drizzle ORM**: Type-safe database queries and migrations
-- **Connection Pooling**: Optimized database connections
+- **Connection Pooling**: Optimized database connections for Vercel
 - **Migrations**: Automated database schema management
 
 ## 🛠 Technology Stack
@@ -109,7 +109,13 @@ backend/
    PORT=3001
    NODE_ENV=development
    
-   # Database Configuration
+   # Database Configuration - Supabase (Recommended)
+   SUPABASE_DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
+   SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
+   SUPABASE_ANON_KEY=[YOUR-ANON-KEY]
+   SUPABASE_SERVICE_ROLE_KEY=[YOUR-SERVICE-ROLE-KEY]
+   
+   # Alternative Database Configuration (Legacy)
    DATABASE_URL=postgresql://user:password@localhost:5432/nightingale_connect
    DB_USER=postgres
    DB_PASSWORD=password
@@ -457,7 +463,10 @@ The application uses Winston for structured logging:
 ```env
 NODE_ENV=production
 PORT=3001
-DATABASE_URL=postgresql://user:password@host:5432/database
+SUPABASE_DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+SUPABASE_URL=https://[PROJECT-REF].supabase.co
+SUPABASE_ANON_KEY=[YOUR-ANON-KEY]
+SUPABASE_SERVICE_ROLE_KEY=[YOUR-SERVICE-ROLE-KEY]
 JWT_SECRET=your-super-secret-production-key
 OPENAI_API_KEY=your-openai-api-key
 FRONTEND_URL=https://nightingale-connect.co.za
@@ -465,11 +474,12 @@ MAX_FILE_SIZE=10485760
 ```
 
 ### Deployment Platforms
+- **Vercel**: Full-stack deployment (recommended)
+- **Supabase**: Database and authentication
 - **Heroku**: Easy deployment with PostgreSQL add-on
 - **Railway**: Simple deployment with automatic scaling
 - **DigitalOcean**: App Platform with managed database
 - **AWS**: EC2 with RDS PostgreSQL
-- **Vercel**: Serverless functions (limited)
 
 ### Database Setup
 1. **Create PostgreSQL database**

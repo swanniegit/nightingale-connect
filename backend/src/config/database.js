@@ -11,16 +11,19 @@ let sql = null;
 
 const connectDB = async () => {
   try {
-    // Database connection string
-    const connectionString = process.env.DATABASE_URL || 
+    // Database connection string - prioritize Supabase URL
+    const connectionString = process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL || 
       `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || 'password'}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'nightingale_connect'}`;
 
-    // Create postgres connection
+    // Create postgres connection with Supabase optimizations
     sql = postgres(connectionString, {
-      max: 10, // Maximum number of connections
+      max: process.env.NODE_ENV === 'production' ? 1 : 10, // Single connection for Vercel
       idle_timeout: 20, // Close idle connections after 20 seconds
       connect_timeout: 10, // Connection timeout
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      // Supabase specific optimizations
+      prepare: false, // Disable prepared statements for better performance
+      max_lifetime: 60 * 30, // 30 minutes max lifetime
     });
 
     // Create Drizzle instance

@@ -44,14 +44,15 @@ Your Nightingale Connect application is now **100% ready** for deployment! Here'
 
 ## 🎯 **Deployment Options**
 
-### **Option 1: One-Click Deploy (Recommended)**
-1. **Frontend**: Deploy to Netlify (free)
-2. **Backend**: Deploy to Railway (free tier available)
+### **Option 1: Vercel + Supabase (Recommended)**
+1. **Full Stack**: Deploy to Vercel (free)
+2. **Database**: Supabase (free tier available)
+3. **AI**: OpenAI GPT-4 integration
 
-### **Option 2: Manual Deployment**
+### **Option 2: Alternative Deployment**
 - **Frontend**: Netlify, Vercel, or GitHub Pages
 - **Backend**: Railway, Render, Heroku, or DigitalOcean
-- **Database**: PostgreSQL (included with most platforms)
+- **Database**: Supabase, Neon, or self-hosted PostgreSQL
 
 ## 🚀 **Next Steps**
 
@@ -60,19 +61,18 @@ Your Nightingale Connect application is now **100% ready** for deployment! Here'
 #### **A. Deploy Now (Recommended)**
 ```bash
 # 1. Fork this repository to your GitHub account
-# 2. Deploy frontend to Netlify:
-#    - Go to netlify.com
-#    - Click "New site from Git"
-#    - Select your repository
-#    - Build command: npm run build
-#    - Publish directory: build
+# 2. Set up Supabase database:
+#    - Go to supabase.com
+#    - Create new project
+#    - Get database connection details
+#    - Run migrations: npm run db:migrate
 
-# 3. Deploy backend to Railway:
-#    - Go to railway.app
+# 3. Deploy to Vercel:
+#    - Go to vercel.com
 #    - Click "New Project"
-#    - Select "Deploy from GitHub repo"
-#    - Set root directory to "backend"
+#    - Import your GitHub repository
 #    - Add environment variables
+#    - Deploy
 ```
 
 #### **B. Local Development First**
@@ -94,28 +94,35 @@ cd backend && npm run dev    # Backend (port 3001)
 
 ## 📋 **Required Environment Variables**
 
-### **Frontend (.env.production)**
+### **Environment Variables**
 ```env
-REACT_APP_API_URL=https://your-backend-url.railway.app
-REACT_APP_ENVIRONMENT=production
-```
+# Supabase
+SUPABASE_DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+SUPABASE_URL=https://[PROJECT-REF].supabase.co
+SUPABASE_ANON_KEY=[YOUR-ANON-KEY]
+SUPABASE_SERVICE_ROLE_KEY=[YOUR-SERVICE-ROLE-KEY]
 
-### **Backend**
-```env
+# OpenAI
+OPENAI_API_KEY=your-openai-api-key
+
+# Security
+JWT_SECRET=your-super-secret-jwt-key
+CORS_ORIGIN=https://your-app.vercel.app
+
+# Server
 NODE_ENV=production
 PORT=3001
-DATABASE_URL=postgresql://... (provided by hosting platform)
-JWT_SECRET=your-super-secret-jwt-key
-OPENAI_API_KEY=your-openai-api-key (optional)
-CORS_ORIGIN=https://your-frontend-url.netlify.app
 ```
 
 ## 🔧 **Configuration Needed**
 
 ### **Essential (Required)**
+- [ ] **SUPABASE_DATABASE_URL**: Your Supabase database connection string
+- [ ] **SUPABASE_URL**: Your Supabase project URL
+- [ ] **SUPABASE_ANON_KEY**: Your Supabase anonymous key
+- [ ] **SUPABASE_SERVICE_ROLE_KEY**: Your Supabase service role key
 - [ ] **JWT_SECRET**: Generate a strong secret key
-- [ ] **Database**: PostgreSQL (automatically provided by hosting platforms)
-- [ ] **CORS_ORIGIN**: Set to your frontend URL
+- [ ] **CORS_ORIGIN**: Set to your Vercel app URL
 
 ### **Optional (Recommended)**
 - [ ] **OpenAI_API_KEY**: For AI assistant features
@@ -159,15 +166,15 @@ CORS_ORIGIN=https://your-frontend-url.netlify.app
 ## 💡 **Recommendations**
 
 ### **For Quick Launch**
-1. **Deploy to Netlify + Railway** (easiest)
+1. **Deploy to Vercel + Supabase** (easiest)
 2. **Use free tiers** initially
 3. **Test with mock data** first
 4. **Add OpenAI API** later for AI features
 
 ### **For Production**
 1. **Set up custom domain**
-2. **Configure SSL certificates**
-3. **Set up monitoring and backups**
+2. **Configure SSL certificates** (handled by Vercel)
+3. **Set up monitoring and backups** (Supabase handles backups)
 4. **Implement email notifications**
 5. **Add analytics tracking**
 

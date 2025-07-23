@@ -37,17 +37,18 @@ A modern, secure, and accessible platform designed to connect healthcare profess
 - **Tailwind CSS 3.4.1** - Utility-first CSS framework
 - **Create React App** - Build tool and development environment
 
-### Backend (Planned)
+### Backend
 - **Node.js 18+** - JavaScript runtime
 - **Express.js 4.18.2** - Web application framework
-- **PostgreSQL 14+** - Primary database (Neon Database)
+- **PostgreSQL 14+** - Primary database (Supabase)
 - **Drizzle ORM 0.29.3** - Type-safe database queries
 - **WebSocket** - Real-time communication
 
 ### External Services
 - **OpenAI GPT-4** - AI-powered wound care assistant
+- **Supabase** - Database and authentication
+- **Vercel** - Hosting and deployment
 - **Stripe** - Payment processing for premium subscriptions
-- **Replit OAuth** - Authentication and authorization
 
 ## 📁 Project Structure
 
@@ -107,23 +108,36 @@ src/
 
 3. **Set up environment variables**
    ```bash
-   cp .env.example .env.local
+   cp backend/env.example backend/.env
    ```
    
-   Edit `.env.local` with your configuration:
+   Edit `backend/.env` with your configuration:
    ```env
-   REACT_APP_API_URL=http://localhost:3001
-   REACT_APP_OPENAI_API_KEY=your-openai-api-key
-   REACT_APP_STRIPE_PUBLISHABLE_KEY=your-stripe-key
+   SUPABASE_DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+   SUPABASE_URL=https://[PROJECT-REF].supabase.co
+   SUPABASE_ANON_KEY=[YOUR-ANON-KEY]
+   SUPABASE_SERVICE_ROLE_KEY=[YOUR-SERVICE-ROLE-KEY]
+   OPENAI_API_KEY=your-openai-api-key
+   JWT_SECRET=your-super-secret-jwt-key
    ```
 
-4. **Start the development server**
+4. **Set up database**
    ```bash
-   npm start
+   cd backend
+   npm run db:migrate
    ```
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+5. **Start the development servers**
+   ```bash
+   # Terminal 1 - Backend
+   cd backend && npm run dev
+   
+   # Terminal 2 - Frontend
+   cd client && npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:5173](http://localhost:5173)
 
 ### Test Accounts
 For development and testing, you can use these pre-configured accounts:
@@ -219,21 +233,29 @@ npm run build
 Set up the following environment variables for production:
 
 ```env
-REACT_APP_API_URL=https://api.nightingale-connect.co.za
-REACT_APP_AUTH_DOMAIN=your-auth-domain.auth0.com
-REACT_APP_AUTH_CLIENT_ID=your-client-id
-REACT_APP_AUTH_AUDIENCE=your-api-audience
-REACT_APP_OPENAI_API_KEY=your-openai-api-key
-REACT_APP_STRIPE_PUBLISHABLE_KEY=your-stripe-key
-REACT_APP_ENVIRONMENT=production
-REACT_APP_DEBUG_MODE=false
+# Supabase
+SUPABASE_DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+SUPABASE_URL=https://[PROJECT-REF].supabase.co
+SUPABASE_ANON_KEY=[YOUR-ANON-KEY]
+SUPABASE_SERVICE_ROLE_KEY=[YOUR-SERVICE-ROLE-KEY]
+
+# OpenAI
+OPENAI_API_KEY=your-openai-api-key
+
+# Security
+JWT_SECRET=your-super-secret-jwt-key
+CORS_ORIGIN=https://your-app.vercel.app
+
+# Server
+NODE_ENV=production
+PORT=3001
 ```
 
 ### Deployment Platforms
-- **Vercel**: Zero-config deployment
-- **Netlify**: Static site hosting
+- **Vercel**: Full-stack deployment (recommended)
+- **Supabase**: Database and authentication
+- **Netlify**: Alternative static site hosting
 - **AWS S3 + CloudFront**: Scalable hosting
-- **Heroku**: Full-stack deployment
 
 ## 📊 Performance
 
@@ -304,10 +326,10 @@ For support and questions:
 - ✅ Accessibility improvements
 
 ### Phase 2 (Next)
-- 🔄 Backend API development
 - 🔄 Real-time chat implementation
 - 🔄 File upload system
 - 🔄 AI assistant integration
+- 🔄 Mobile application
 
 ### Phase 3 (Future)
 - 📋 Mobile application
