@@ -3,7 +3,7 @@
 
 export const config = {
   app: {
-    url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    url: process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'),
     name: 'Nightingale Connect',
     version: '1.0.0',
   },

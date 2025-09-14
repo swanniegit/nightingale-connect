@@ -342,3 +342,4 @@ backend/.env
 attached_assets/
 .claude/
 .playwright-mcp/
+.vercel
