@@ -4,6 +4,7 @@ import { Message } from '@/types'
 import { MedicalDataMessage } from './MedicalDataMessage'
 import { MediaMessage } from './MediaMessage'
 import { MessageReactions } from './MessageReactions'
+import { ThreadIndicator } from './ThreadIndicator'
 
 // CATEGORY: UI Utilities
 // CONTEXT: Client
@@ -16,6 +17,10 @@ interface EnhancedMessageBubbleProps {
   onRemoveReaction: (messageId: string, emoji: string) => void
   currentUserId: string
   onReply?: (message: Message) => void
+  onViewThread?: (messageId: string) => void
+  replyCount?: number
+  lastReplyAt?: Date
+  showThreadIndicator?: boolean
 }
 
 export function EnhancedMessageBubble({
@@ -25,7 +30,11 @@ export function EnhancedMessageBubble({
   onReaction,
   onRemoveReaction,
   currentUserId,
-  onReply
+  onReply,
+  onViewThread,
+  replyCount = 0,
+  lastReplyAt,
+  showThreadIndicator = true
 }: EnhancedMessageBubbleProps) {
   const getStatusIcon = (status: Message['status']) => {
     switch (status) {
@@ -106,14 +115,24 @@ export function EnhancedMessageBubble({
           />
         </div>
         
-        {onReply && message.kind !== 'system' && (
-          <button
-            onClick={() => onReply(message)}
-            className="text-xs opacity-70 hover:opacity-100 mt-1"
-          >
-            Reply
-          </button>
-        )}
+        <div className="flex items-center justify-between mt-2">
+          {onReply && message.kind !== 'system' && (
+            <button
+              onClick={() => onReply(message)}
+              className="text-xs opacity-70 hover:opacity-100"
+            >
+              Reply
+            </button>
+          )}
+          
+          {showThreadIndicator && replyCount > 0 && onViewThread && (
+            <ThreadIndicator
+              replyCount={replyCount}
+              lastReplyAt={lastReplyAt}
+              onClick={() => onViewThread(message.id || message.cid)}
+            />
+          )}
+        </div>
       </div>
     </div>
   )

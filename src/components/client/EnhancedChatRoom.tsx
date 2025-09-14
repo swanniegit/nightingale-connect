@@ -4,8 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { useAuthContext } from '@/components/providers/AuthProvider'
 import { useTypingIndicator } from '@/hooks/useTypingIndicator'
 import { useMessageReactions } from '@/hooks/useMessageReactions'
+import { useMessageThreads } from '@/hooks/useMessageThreads'
 import { EnhancedMessageBubble } from '@/components/ui/EnhancedMessageBubble'
 import { TypingIndicator } from '@/components/ui/TypingIndicator'
+import { ThreadView } from '@/components/ui/ThreadView'
 import { ChatInput } from '@/components/ui/ChatInput'
 import { Card } from '@/components/ui/Card'
 import { Message } from '@/types'
@@ -23,6 +25,7 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
   const { user, demoLogin } = useAuthContext()
   const [messages, setMessages] = useState<Message[]>([])
   const [replyTo, setReplyTo] = useState<Message | null>(null)
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
   const { typingUsers, handleTyping } = useTypingIndicator({
@@ -35,6 +38,19 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
     removeReaction,
     getReactionsForMessage
   } = useMessageReactions()
+
+  const {
+    threads,
+    getThreadByParentMessage,
+    getThreadMessages,
+    getReplyCount,
+    createThread,
+    addReply,
+    loadThreadMessages
+  } = useMessageThreads({
+    roomId,
+    currentUserId: user?.id || ''
+  })
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -151,6 +167,39 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
     setReplyTo(message)
   }
 
+  const handleViewThread = async (messageId: string) => {
+    try {
+      // Check if thread exists
+      let thread = getThreadByParentMessage(messageId)
+      
+      if (!thread) {
+        // Create new thread
+        thread = await createThread(messageId)
+      }
+      
+      if (thread) {
+        setSelectedThreadId(thread.id)
+        await loadThreadMessages(thread.id)
+      }
+    } catch (error) {
+      console.error('Failed to view thread:', error)
+    }
+  }
+
+  const handleSendThreadReply = async (content: string, replyToMessageId: string) => {
+    if (!selectedThreadId || !user) return
+
+    try {
+      await addReply(selectedThreadId, content)
+    } catch (error) {
+      console.error('Failed to send thread reply:', error)
+    }
+  }
+
+  const handleCloseThread = () => {
+    setSelectedThreadId(null)
+  }
+
   const getSenderName = (senderId: string) => {
     if (senderId === user?.id) return 'You'
     return `User ${senderId.slice(-4)}`
@@ -177,21 +226,31 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
-        {messages.map((message) => (
-          <EnhancedMessageBubble
-            key={message.id || message.cid}
-            message={{
-              ...message,
-              reactions: getReactionsForMessage(message.id || message.cid)
-            }}
-            isOwn={message.senderId === user?.id}
-            senderName={getSenderName(message.senderId)}
-            onReaction={handleReaction}
-            onRemoveReaction={handleRemoveReaction}
-            currentUserId={user?.id || ''}
-            onReply={handleReply}
-          />
-        ))}
+        {messages.map((message) => {
+          const messageId = message.id || message.cid
+          const replyCount = getReplyCount(messageId)
+          const thread = getThreadByParentMessage(messageId)
+          const lastReplyAt = thread ? new Date(thread.lastMessageAt) : undefined
+
+          return (
+            <EnhancedMessageBubble
+              key={messageId}
+              message={{
+                ...message,
+                reactions: getReactionsForMessage(messageId)
+              }}
+              isOwn={message.senderId === user?.id}
+              senderName={getSenderName(message.senderId)}
+              onReaction={handleReaction}
+              onRemoveReaction={handleRemoveReaction}
+              currentUserId={user?.id || ''}
+              onReply={handleReply}
+              onViewThread={handleViewThread}
+              replyCount={replyCount}
+              lastReplyAt={lastReplyAt}
+            />
+          )
+        })}
         
         <TypingIndicator
           typingUsers={typingUsers}
@@ -221,6 +280,18 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
           />
         )}
       </div>
+
+      {/* Thread View Modal */}
+      {selectedThreadId && (
+        <ThreadView
+          threadId={selectedThreadId}
+          parentMessage={messages.find(m => getThreadByParentMessage(m.id || m.cid)?.id === selectedThreadId) || messages[0]}
+          messages={getThreadMessages(selectedThreadId)}
+          currentUserId={user?.id || ''}
+          onSendReply={handleSendThreadReply}
+          onClose={handleCloseThread}
+        />
+      )}
     </Card>
   )
 }
