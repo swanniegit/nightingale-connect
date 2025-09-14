@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { Message, MessageReaction } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 // CATEGORY: Data & State Hook
 // CONTEXT: Client
@@ -40,11 +41,7 @@ export function useMessageReactions() {
 
     // Send to server
     try {
-      await fetch('http://localhost:3000/api/reactions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messageId, emoji, userId, action: 'add' })
-      })
+      await apiClient.post('/reactions', { messageId, emoji, userId, action: 'add' })
     } catch (error) {
       console.error('Failed to add reaction:', error)
     }
@@ -63,11 +60,7 @@ export function useMessageReactions() {
 
     // Send to server
     try {
-      await fetch('http://localhost:3000/api/reactions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messageId, emoji, userId, action: 'remove' })
-      })
+      await apiClient.post('/reactions', { messageId, emoji, userId, action: 'remove' })
     } catch (error) {
       console.error('Failed to remove reaction:', error)
     }

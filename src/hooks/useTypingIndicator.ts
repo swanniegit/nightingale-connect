@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { TypingIndicator } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 // CATEGORY: Data & State Hook
 // CONTEXT: Client
@@ -31,11 +32,7 @@ export function useTypingIndicator({
     setIsTyping(true)
     
     try {
-      await fetch('http://localhost:3000/api/typing', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, roomId, isTyping: true })
-      })
+      await apiClient.post('/typing', { userId: currentUserId, roomId, isTyping: true })
     } catch (error) {
       console.error('Failed to send typing start:', error)
     }
@@ -47,11 +44,7 @@ export function useTypingIndicator({
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     
     try {
-      await fetch('http://localhost:3000/api/typing', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, roomId, isTyping: false })
-      })
+      await apiClient.post('/typing', { userId: currentUserId, roomId, isTyping: false })
     } catch (error) {
       console.error('Failed to send typing stop:', error)
     }
