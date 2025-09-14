@@ -15,8 +15,8 @@ export async function OPTIONS() {
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const roomId = searchParams.get('roomId')
+    const { searchParams, pathname } = new URL(request.url)
+    const roomId = searchParams.get('roomId') || pathname.split('/').pop()
 
     if (!roomId) {
       return NextResponse.json(
