@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 // CATEGORY: UI Utilities
 // CONTEXT: Client
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'outline'
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -20,6 +20,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'bg-primary text-primary-foreground hover:bg-primary/90': variant === 'primary',
             'bg-secondary text-secondary-foreground hover:bg-secondary/80': variant === 'secondary',
             'hover:bg-accent hover:text-accent-foreground': variant === 'ghost',
+            'border border-input bg-background hover:bg-accent hover:text-accent-foreground': variant === 'outline',
           },
           {
             'h-9 px-3 text-sm': size === 'sm',

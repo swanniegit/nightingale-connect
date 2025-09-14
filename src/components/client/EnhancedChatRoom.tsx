@@ -5,10 +5,14 @@ import { useAuthContext } from '@/components/providers/AuthProvider'
 import { useTypingIndicator } from '@/hooks/useTypingIndicator'
 import { useMessageReactions } from '@/hooks/useMessageReactions'
 import { useMessageThreads } from '@/hooks/useMessageThreads'
+import { useMessageSearch } from '@/hooks/useMessageSearch'
 import { EnhancedMessageBubble } from '@/components/ui/EnhancedMessageBubble'
 import { TypingIndicator } from '@/components/ui/TypingIndicator'
 import { ThreadView } from '@/components/ui/ThreadView'
+import { SearchModal } from '@/components/ui/SearchModal'
+import { MessageHistory } from '@/components/ui/MessageHistory'
 import { ChatInput } from '@/components/ui/ChatInput'
+import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Message } from '@/types'
 import { apiClient } from '@/lib/api-client'
@@ -26,6 +30,8 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [replyTo, setReplyTo] = useState<Message | null>(null)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+  const [showSearchModal, setShowSearchModal] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
   const { typingUsers, handleTyping } = useTypingIndicator({
@@ -48,6 +54,18 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
     addReply,
     loadThreadMessages
   } = useMessageThreads({
+    roomId,
+    currentUserId: user?.id || ''
+  })
+
+  const {
+    searchResults,
+    isSearching,
+    searchQuery,
+    filterOptions,
+    searchMessages,
+    clearSearch
+  } = useMessageSearch({
     roomId,
     currentUserId: user?.id || ''
   })
@@ -200,6 +218,19 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
     setSelectedThreadId(null)
   }
 
+  const handleSearchMessage = (message: Message) => {
+    // Scroll to the message in the chat
+    const messageElement = document.getElementById(`message-${message.id || message.cid}`)
+    if (messageElement) {
+      messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      // Highlight the message temporarily
+      messageElement.classList.add('bg-yellow-100')
+      setTimeout(() => {
+        messageElement.classList.remove('bg-yellow-100')
+      }, 3000)
+    }
+  }
+
   const getSenderName = (senderId: string) => {
     if (senderId === user?.id) return 'You'
     return `User ${senderId.slice(-4)}`
@@ -208,7 +239,27 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
   return (
     <Card className="h-96 flex flex-col">
       <div className="p-4 border-b">
-        <h3 className="font-semibold">{roomName}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold">{roomName}</h3>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSearchModal(true)}
+              className="text-xs"
+            >
+              🔍 Search
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-xs"
+            >
+              📜 History
+            </Button>
+          </div>
+        </div>
         {replyTo && (
           <div className="mt-2 p-2 bg-gray-100 rounded text-sm">
             <div className="font-medium">Replying to:</div>
@@ -233,22 +284,23 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
           const lastReplyAt = thread ? new Date(thread.lastMessageAt) : undefined
 
           return (
-            <EnhancedMessageBubble
-              key={messageId}
-              message={{
-                ...message,
-                reactions: getReactionsForMessage(messageId)
-              }}
-              isOwn={message.senderId === user?.id}
-              senderName={getSenderName(message.senderId)}
-              onReaction={handleReaction}
-              onRemoveReaction={handleRemoveReaction}
-              currentUserId={user?.id || ''}
-              onReply={handleReply}
-              onViewThread={handleViewThread}
-              replyCount={replyCount}
-              lastReplyAt={lastReplyAt}
-            />
+            <div key={messageId} id={`message-${messageId}`}>
+              <EnhancedMessageBubble
+                message={{
+                  ...message,
+                  reactions: getReactionsForMessage(messageId)
+                }}
+                isOwn={message.senderId === user?.id}
+                senderName={getSenderName(message.senderId)}
+                onReaction={handleReaction}
+                onRemoveReaction={handleRemoveReaction}
+                currentUserId={user?.id || ''}
+                onReply={handleReply}
+                onViewThread={handleViewThread}
+                replyCount={replyCount}
+                lastReplyAt={lastReplyAt}
+              />
+            </div>
           )
         })}
         
@@ -291,6 +343,41 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
           onSendReply={handleSendThreadReply}
           onClose={handleCloseThread}
         />
+      )}
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={showSearchModal}
+        onClose={() => setShowSearchModal(false)}
+        onMessageClick={handleSearchMessage}
+        currentUserId={user?.id || ''}
+        roomId={roomId}
+      />
+
+      {/* Message History */}
+      {showHistory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-4xl max-h-[80vh] flex flex-col">
+            <div className="p-4 border-b flex items-center justify-between">
+              <h3 className="font-semibold text-lg">Message History</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHistory(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </Button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <MessageHistory
+                messages={messages}
+                currentUserId={user?.id || ''}
+                onMessageClick={handleSearchMessage}
+              />
+            </div>
+          </Card>
+        </div>
       )}
     </Card>
   )
