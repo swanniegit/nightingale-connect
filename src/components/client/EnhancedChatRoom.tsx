@@ -9,6 +9,7 @@ import { TypingIndicator } from '@/components/ui/TypingIndicator'
 import { ChatInput } from '@/components/ui/ChatInput'
 import { Card } from '@/components/ui/Card'
 import { Message } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 // CATEGORY: Client Orchestrator
 // CONTEXT: Client
@@ -44,25 +45,13 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
   useEffect(() => {
     const loadMessages = async () => {
       try {
-        const url = `http://localhost:3000/api/messages/room/${roomId}`
-        console.log('Fetching messages from:', url)
-        const response = await fetch(url)
+        const response = await apiClient.get(`/messages/room/${roomId}`)
         
-        console.log('Response status:', response.status)
-        console.log('Response headers:', Object.fromEntries(response.headers.entries()))
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+        if (response.error) {
+          throw new Error(response.error)
         }
         
-        const contentType = response.headers.get('content-type')
-        if (!contentType || !contentType.includes('application/json')) {
-          const text = await response.text()
-          console.error('Expected JSON but got:', text.substring(0, 100))
-          throw new Error('Response is not JSON')
-        }
-        
-        const data = await response.json()
+        const data = response.data as any[]
         
         const formattedMessages: Message[] = data.map((msg: any) => ({
           id: msg.id,
@@ -119,33 +108,23 @@ export function EnhancedChatRoom({ roomId, roomName }: EnhancedChatRoomProps) {
     setReplyTo(null)
 
     try {
-      const response = await fetch('http://localhost:3000/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          roomId,
-          content,
-          replyTo: replyTo?.id
-        })
+      const response = await apiClient.post('/messages', {
+        roomId,
+        content,
+        replyTo: replyTo?.id
       })
 
-      if (response.ok) {
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === newMessage.id 
-              ? { ...msg, status: 'sent' }
-              : msg
-          )
-        )
-      } else {
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === newMessage.id 
-              ? { ...msg, status: 'failed' }
-              : msg
-          )
-        )
+      if (response.error) {
+        throw new Error(response.error)
       }
+
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === newMessage.id 
+            ? { ...msg, status: 'sent' }
+            : msg
+        )
+      )
     } catch (error) {
       console.error('Failed to send message:', error)
       setMessages(prev => 

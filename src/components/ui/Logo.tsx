@@ -19,8 +19,8 @@ export function Logo({ variant = 'circle', size = 'md', className = '' }: LogoPr
   }
 
   const logoSrc = variant === 'circle' 
-    ? '/assets/Nightingale Logo - Full Colour - Small.jpg'
-    : '/assets/Nightingale Logo - Full Colour - HD.jpg'
+    ? '/assets/nightingale-logo-small.jpg'
+    : '/assets/nightingale-logo-hd.jpg'
   
   // Fallback to placeholder if images don't exist
   const fallbackSrc = '/assets/placeholder-logo.svg'
