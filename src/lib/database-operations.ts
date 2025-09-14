@@ -28,7 +28,7 @@ export class MessageDB {
     const store = tx.objectStore('messages')
     const index = store.index('byRoomTime')
     
-    const messages = await index.getAll([roomId], limit)
+    const messages = await index.getAll([roomId, new Date(0)], limit)
     return messages.reverse()
   }
 
@@ -129,7 +129,7 @@ export class MemberDB {
     const db = await dbp!
     const tx = db.transaction('members', 'readonly')
     const store = tx.objectStore('members')
-    const index = store.index('byUser')
+    const index = store.index('byRoom')
     
     return await index.getAll(userId)
   }

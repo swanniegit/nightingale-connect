@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 interface CardProps extends HTMLAttributes<HTMLDivElement> {}
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, ...props }, ref) => {
+  function Card({ className, ...props }, ref) {
     return (
       <div
         ref={ref}

@@ -8,7 +8,8 @@ export async function withTransaction<T>(
   operation: (tx: any) => Promise<T>
 ): Promise<T> {
   const db = await dbp
-  const tx = db.transaction(stores, 'readwrite')
+  if (!db) throw new Error('Database not available')
+  const tx = db.transaction(stores as any, 'readwrite')
   try {
     const result = await operation(tx)
     await tx.done
@@ -24,7 +25,8 @@ export async function withReadTransaction<T>(
   operation: (tx: any) => Promise<T>
 ): Promise<T> {
   const db = await dbp
-  const tx = db.transaction(stores, 'readonly')
+  if (!db) throw new Error('Database not available')
+  const tx = db.transaction(stores as any, 'readonly')
   try {
     const result = await operation(tx)
     await tx.done

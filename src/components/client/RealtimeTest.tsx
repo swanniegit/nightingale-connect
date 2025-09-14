@@ -43,7 +43,7 @@ export function RealtimeTest() {
   const testMessageSubscription = () => {
     try {
       subscribeToMessages('test-room', (message) => {
-        addResult(`📨 New message received: ${message.content}`)
+        addResult(`📨 New message received: ${message.text || 'Media message'}`)
       })
       addResult('✅ Subscribed to messages for test-room')
     } catch (error) {
@@ -54,7 +54,7 @@ export function RealtimeTest() {
   const testRoomSubscription = () => {
     try {
       subscribeToRooms((room) => {
-        addResult(`🏠 New room received: ${room.name}`)
+        addResult(`🏠 New room received: ${room.title}`)
       })
       addResult('✅ Subscribed to rooms')
     } catch (error) {
@@ -65,7 +65,7 @@ export function RealtimeTest() {
   const testMemberSubscription = () => {
     try {
       subscribeToMembers('test-room', (member) => {
-        addResult(`👥 New member received: ${member.user_id}`)
+        addResult(`👥 New member received: ${member.userId}`)
       })
       addResult('✅ Subscribed to members for test-room')
     } catch (error) {

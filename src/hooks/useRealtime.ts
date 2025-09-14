@@ -29,7 +29,7 @@ export function useRealtime() {
         realtimeManager.unsubscribeAll()
       }
     }
-  }, []) // Empty dependency array to prevent infinite loop
+  }, [realtimeManager]) // Include realtimeManager in dependencies
 
   const subscribeToMessages = useCallback((roomId: string, onMessage: (message: Message) => void) => {
     if (!realtimeManager) return

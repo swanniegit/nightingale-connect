@@ -39,6 +39,7 @@ export function MediaMessage({ message, isOwn }: MediaMessageProps) {
   if (isImage) {
     return (
       <div className="max-w-xs">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={message.media.url || message.media.blobRef}
           alt="Shared image"

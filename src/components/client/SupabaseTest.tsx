@@ -80,7 +80,7 @@ export function SupabaseTest() {
         <div className="bg-gray-100 p-4 rounded-lg max-h-64 overflow-y-auto">
           <h4 className="font-medium mb-2">Test Results:</h4>
           {results.length === 0 ? (
-            <p className="text-gray-500 text-sm">No results yet. Click "Test Connection" above.</p>
+            <p className="text-gray-500 text-sm">No results yet. Click &quot;Test Connection&quot; above.</p>
           ) : (
             <div className="space-y-1">
               {results.map((result, index) => (

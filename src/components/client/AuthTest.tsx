@@ -21,7 +21,11 @@ export function AuthTest() {
   }
 
   const handleSignup = async (data: { email: string; password: string; name: string; role: string }) => {
-    const result = await signup(data)
+    const signupData = {
+      ...data,
+      role: data.role as 'admin' | 'practitioner' | 'nurse'
+    }
+    const result = await signup(signupData)
     if (result.success) {
       setIsAuthModalOpen(false)
     }

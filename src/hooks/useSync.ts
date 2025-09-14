@@ -17,7 +17,9 @@ export function useSync() {
 
   useEffect(() => {
     const unsubscribe = syncManager.subscribe(id, setStatus)
-    return unsubscribe
+    return () => {
+      unsubscribe()
+    }
   }, [id])
 
   const syncNow = useCallback(() => {

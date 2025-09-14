@@ -10,6 +10,7 @@ interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<{ success: boolean; user?: User; error?: string }>
   signup: (data: SignupData) => Promise<{ success: boolean; user?: User; error?: string }>
   logout: () => void
+  demoLogin: () => void
   clearError: () => void
 }
 

@@ -57,12 +57,13 @@ const migrations: Migration[] = [
 
 export async function runMigrations(): Promise<void> {
   const db = await dbp
+  if (!db) throw new Error('Database not available')
   const currentVersion = db.version
   
   for (const migration of migrations) {
     if (migration.version > currentVersion) {
       console.log(`Running migration: ${migration.name}`)
-      await migration.up(db)
+      await migration.up(db as any)
     }
   }
 }

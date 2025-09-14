@@ -24,6 +24,7 @@ export class DatabaseCleanup {
     cutoffDate.setDate(cutoffDate.getDate() - daysOld)
     
     const db = await dbp
+    if (!db) throw new Error('Database not available')
     const tx = db.transaction('messages', 'readwrite')
     const store = tx.objectStore('messages')
     const index = store.index('byRoomTime')
@@ -45,6 +46,7 @@ export class DatabaseCleanup {
 
   static async clearFailedOutboxItems(): Promise<number> {
     const db = await dbp
+    if (!db) throw new Error('Database not available')
     const tx = db.transaction('outbox', 'readwrite')
     const store = tx.objectStore('outbox')
     
@@ -68,6 +70,7 @@ export class DatabaseCleanup {
     cutoffDate.setDate(cutoffDate.getDate() - daysOld)
     
     const db = await dbp
+    if (!db) throw new Error('Database not available')
     const tx = db.transaction('mediaBlobs', 'readwrite')
     const store = tx.objectStore('mediaBlobs')
     
@@ -97,6 +100,7 @@ export class DatabaseCleanup {
     total: number
   }> {
     const db = await dbp
+    if (!db) throw new Error('Database not available')
     
     const [messages, rooms, members, outbox, mediaBlobs, reads] = await Promise.all([
       db.count('messages'),
