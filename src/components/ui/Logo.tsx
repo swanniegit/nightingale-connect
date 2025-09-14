@@ -1,0 +1,47 @@
+'use client'
+
+import Image from 'next/image'
+
+// CATEGORY: UI Utilities
+// CONTEXT: Client
+interface LogoProps {
+  variant?: 'circle' | 'full'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  className?: string
+}
+
+export function Logo({ variant = 'circle', size = 'md', className = '' }: LogoProps) {
+  const sizeClasses = {
+    sm: 'w-8 h-8',
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16',
+    xl: 'w-24 h-24'
+  }
+
+  const logoSrc = variant === 'circle' 
+    ? '/assets/Nightingale Logo - Full Colour - Small.jpg'
+    : '/assets/Nightingale Logo - Full Colour - HD.jpg'
+  
+  // Fallback to placeholder if images don't exist
+  const fallbackSrc = '/assets/placeholder-logo.svg'
+
+  return (
+    <div className={`${sizeClasses[size]} ${className}`}>
+      <Image
+        src={logoSrc}
+        alt="Nightingale Connect Logo"
+        width={96}
+        height={96}
+        className="w-full h-full object-contain"
+        priority
+        onError={(e) => {
+          // Fallback to placeholder SVG if image fails to load
+          const target = e.target as HTMLImageElement
+          if (target.src !== fallbackSrc) {
+            target.src = fallbackSrc
+          }
+        }}
+      />
+    </div>
+  )
+}

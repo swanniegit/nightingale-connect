@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Logo Images</title>
+</head>
+<body>
+    <h1>Testing Logo Images</h1>
+    
+    <h2>Small Logo (Circle)</h2>
+    <img src="/assets/Nightingale Logo - Full Colour - Small.jpg" alt="Small Logo" style="width: 100px; height: 100px; border: 1px solid #ccc;">
+    
+    <h2>HD Logo (Full)</h2>
+    <img src="/assets/Nightingale Logo - Full Colour - HD.jpg" alt="HD Logo" style="width: 200px; height: 200px; border: 1px solid #ccc;">
+    
+    <h2>Placeholder SVG</h2>
+    <img src="/assets/placeholder-logo.svg" alt="Placeholder" style="width: 100px; height: 100px; border: 1px solid #ccc;">
+    
+    <script>
+        // Test if images load
+        document.querySelectorAll('img').forEach(img => {
+            img.onload = () => console.log('✅ Loaded:', img.src);
+            img.onerror = () => console.log('❌ Failed to load:', img.src);
+        });
+    </script>
+</body>
+</html>
