@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 // CATEGORY: UI Utilities
 // CONTEXT: Client
 interface LogoProps {
@@ -27,13 +25,10 @@ export function Logo({ variant = 'circle', size = 'md', className = '' }: LogoPr
 
   return (
     <div className={`${sizeClasses[size]} ${className}`}>
-      <Image
+      <img
         src={logoSrc}
         alt="Nightingale Connect Logo"
-        width={96}
-        height={96}
         className="w-full h-full object-contain"
-        priority
         onError={(e) => {
           // Fallback to placeholder SVG if image fails to load
           const target = e.target as HTMLImageElement
